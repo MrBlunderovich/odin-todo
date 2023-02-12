@@ -20,5 +20,8 @@
   },
   "name": "odin-todo",
   "main": "webpack.config.js",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "nanoid": "^4.0.1"
+  }
 }
