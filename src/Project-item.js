@@ -1,34 +1,35 @@
 import { nanoid } from "nanoid";
-export default function Project() {
-  let _title = "New project";
+import Todo from "./Todo-item";
+export default function Project(title = "New Project") {
+  let _title = title;
   const _id = nanoid();
-  let _todos = [];
+  let _tasks = [];
 
-  function getId() {
-    return _id;
+  function addTask(newTask) {
+    _tasks.push(newTask);
   }
-  function getTitle() {
-    return _title;
+  function newTask(title) {
+    _tasks.push(Todo(_id, title));
   }
-  function setTitle(newtitle) {
-    _title = newtitle;
-  }
-  function getTodos() {
-    return _todos;
-  }
-  function addTodo(newTodo) {
-    _todos.push(newTodo);
-  }
-  function removeTodo(todo) {
-    _todos = _todos.filter((item) => item !== todo);
+  function removeTask(task) {
+    _tasks = _tasks.filter((item) => item !== task);
   }
 
   return {
-    id: getId(),
-    title: getTitle(),
-    todos: getTodos(),
-    setTitle,
-    addTodo,
-    removeTodo,
+    get id() {
+      return _id;
+    },
+    get title() {
+      return _title;
+    },
+    set title(newTitle) {
+      title = newTitle;
+    },
+    get tasks() {
+      return _tasks;
+    },
+    addTask,
+    removeTask,
+    newTask,
   };
 }
