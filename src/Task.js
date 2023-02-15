@@ -125,5 +125,7 @@ function TaskInput(task, fieldType) {
   element.classList.add("task-input", `task-${fieldType}`);
   element.value = task[fieldType];
   element.dataset.projectId = task.projectId;
+  element.dataset.taskId = task.id;
+  element.dataset.type = fieldType;
   return element;
 }

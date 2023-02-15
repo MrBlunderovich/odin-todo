@@ -116,7 +116,16 @@ const GUI = (function () {
     }
   }
 
-  //projectContainer.addEventListener("change", (event) => console.log(event));
+  expandedProjectDiv.addEventListener("change", handleTaskInputChange);
+  function handleTaskInputChange(event) {
+    console.log("handleTaskInputChange invoked");
+    const taskId = event.target.dataset.taskId;
+    const fieldType = event.target.dataset.type;
+    const targetTask = topProject.tasks.find((task) => task.id === taskId);
+    targetTask[fieldType] = event.target.value;
+
+    state.syncStorage();
+  }
 
   function refresh() {
     console.log("GUI.refresh invoked");
@@ -163,6 +172,10 @@ const GUI = (function () {
       projectContainer.appendChild(projectCard);
     }
     state.syncStorage();
+
+    /* document.querySelectorAll(".task-input").forEach((input) => {
+      input.addEventListener("change", (event) => console.log(event));
+    }); */
   }
 
   return {
