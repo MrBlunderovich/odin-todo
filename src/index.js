@@ -22,10 +22,29 @@ const state = (function () {
     return _projects;
   }
   function loadProjects() {
-    const loadedProjects = localStorage.getItem("projects");
-    if (loadedProjects) {
-      _projects = JSON.parse(loadedProjects);
+    let loadedProjects = localStorage.getItem("projects");
+    if (loadedProjects && _projects.length === 0) {
+      console.log("loading projects from localstorage");
+      loadedProjects = JSON.parse(loadedProjects);
+    } else {
+      console.log("nothing was loaded from localstorage");
+      return;
     }
+    loadedProjects = loadedProjects.map((project) => {
+      let newProject = Project(project.title, project.id, project.tasks);
+      newProject.tasks = newProject.tasks.map((task) => {
+        return Task(
+          task.projectId,
+          task.title,
+          task.description,
+          task.dueDate,
+          task.priority,
+          task.isCompleted
+        );
+      });
+      return newProject;
+    });
+    _projects = loadedProjects;
   }
   function selectProject(projectId) {
     //moves selected project to the start of _projects array
@@ -58,14 +77,16 @@ const GUI = (function () {
   const newTaskButton = document.querySelector(".new-item");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
-  let projectZero = undefined;
+  let topProject = undefined;
 
   expandedProjectDiv.addEventListener("click", handleProjectClicks);
   function handleProjectClicks(event) {
     if (event.target.dataset.type === "add-task") {
       console.log("GUI.createNewTask invoked");
-      console.log(projectZero);
-      projectZero.newTask(); //////////////////////////?????
+      console.log(topProject);
+      console.log(state.getProjects()[0]);
+      console.log(state.getProjects()[0].newTask());
+      //topProject.newTask(); //////////////////////////?????
       refresh();
     }
   }
@@ -95,17 +116,19 @@ const GUI = (function () {
     }
   }
 
+  //projectContainer.addEventListener("change", (event) => console.log(event));
+
   function refresh() {
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
-    projectZero = currentProjects[0];
-    if (!projectZero) {
+    topProject = currentProjects[0];
+    if (!topProject) {
       console.log("GUI.refresh failed");
       return;
     }
-    projectTitle.textContent = projectZero.title;
+    projectTitle.textContent = topProject.title;
     taskContainer.innerHTML = "";
-    for (let task of projectZero.tasks) {
+    for (let task of topProject.tasks) {
       /* const taskElement = document.createElement("li");
       taskElement.classList.add("task-item");
       taskElement.textContent = `${task.title} ${task.description} ${task.priority}`;

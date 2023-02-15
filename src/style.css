@@ -78,6 +78,10 @@ ul {
 .new-item {
   padding: 0.5rem 2rem;
 }
-.task-input {
-  width: 15ch;
+.task-input,
+.task-input:focus {
+  max-width: 13ch;
+  margin-right: 1rem;
+  border: none;
+  outline: none;
 }

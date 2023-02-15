@@ -1,10 +1,14 @@
 import { nanoid } from "nanoid";
 import Task from "./Task";
 
-export default function Project(title = "New Project") {
+export default function Project(
+  title = "New Project",
+  id = nanoid(),
+  tasks = []
+) {
   let _title = title;
-  const _id = nanoid();
-  let _tasks = [];
+  const _id = id;
+  let _tasks = tasks;
 
   function addTask(newTask) {
     _tasks.push(newTask);
@@ -28,6 +32,9 @@ export default function Project(title = "New Project") {
     },
     get tasks() {
       return _tasks;
+    },
+    set tasks(newTasks) {
+      _tasks = newTasks;
     },
     addTask,
     removeTask,
