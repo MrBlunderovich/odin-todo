@@ -1,7 +1,8 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
-import Todo from "./Todo-item";
-import Project from "./Project-item";
+import Task, { TaskComponent } from "./Task";
+import Project, { ProjectComponent } from "./Project";
+//import ProjectComponent from "./ProjectComponent";
 
 const state = (function () {
   let _projects = [];
@@ -13,8 +14,9 @@ const state = (function () {
     GUI.refresh();
   }
   function removeProject(id) {
+    console.log("state.removeProject invoked");
     _projects = _projects.filter((project) => project.id !== id);
-    syncStorage();
+    GUI.refresh();
   }
   function getProjects() {
     return _projects;
@@ -28,9 +30,7 @@ const state = (function () {
   function selectProject(projectId) {
     //moves selected project to the start of _projects array
     console.log("state.selectProject invoked");
-    console.log(projectId);
     const index = _projects.findIndex((project) => project.id === projectId);
-    console.log(index);
     _projects.unshift(_projects.splice(index, 1)[0]);
   }
   function syncStorage() {
@@ -46,22 +46,28 @@ const state = (function () {
     syncStorage,
   };
 })();
+
+state.loadProjects();
+
 //////////////////////////////////////////////////////////////////////
 const GUI = (function () {
   //const sidebar = document.querySelector(".sidebar");
   const projectContainer = document.querySelector(".project-container");
   const newProjectButton = document.querySelector(".new-project");
-  //const expandedProjectDiv = document.querySelector(".project-expanded");
+  const expandedProjectDiv = document.querySelector(".project-expanded");
   const newTaskButton = document.querySelector(".new-item");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
   let projectZero = undefined;
 
-  newTaskButton.addEventListener("click", createNewTask);
-  function createNewTask() {
-    console.log("GUI.createNewTask invoked");
-    projectZero.newTask();
-    refresh();
+  expandedProjectDiv.addEventListener("click", handleProjectClicks);
+  function handleProjectClicks(event) {
+    if (event.target.dataset.type === "add-task") {
+      console.log("GUI.createNewTask invoked");
+      console.log(projectZero);
+      projectZero.newTask(); //////////////////////////?????
+      refresh();
+    }
   }
 
   newProjectButton.addEventListener("click", createNewProject);
@@ -71,11 +77,22 @@ const GUI = (function () {
     //const newProject = Project();
   }
 
-  projectContainer.addEventListener("click", selectProject);
-  function selectProject(event) {
-    console.log("GUI.selectProject invoked");
-    state.selectProject(event.target.dataset.id);
-    refresh();
+  projectContainer.addEventListener("click", handleSidebarClicks);
+  function handleSidebarClicks(event) {
+    const clickSource = event.target.dataset.type;
+    if (!clickSource) {
+      console.log("handleSidebarClicks failed");
+      console.log(event);
+      return;
+    }
+    if (clickSource === "project-card") {
+      console.log("GUI.selectProject invoked");
+      state.selectProject(event.target.dataset.id);
+      refresh();
+    } else if (clickSource === "del-project") {
+      const projectId = event.target.dataset.projectId;
+      state.removeProject(projectId);
+    }
   }
 
   function refresh() {
@@ -84,21 +101,42 @@ const GUI = (function () {
     projectZero = currentProjects[0];
     if (!projectZero) {
       console.log("GUI.refresh failed");
+      return;
     }
     projectTitle.textContent = projectZero.title;
     taskContainer.innerHTML = "";
     for (let task of projectZero.tasks) {
-      const taskElement = document.createElement("li");
+      /* const taskElement = document.createElement("li");
       taskElement.classList.add("task-item");
       taskElement.textContent = `${task.title} ${task.description} ${task.priority}`;
+       */
+      const taskElement = TaskComponent(task);
       taskContainer.appendChild(taskElement);
     }
     projectContainer.innerHTML = "";
     for (let project of currentProjects) {
-      const projectCard = document.createElement("div");
+      /* const projectCard = document.createElement("div");
       projectCard.classList.add("card");
       projectCard.dataset.id = project.id;
+      projectCard.dataset.type = "project-card";
       projectCard.textContent = project.title;
+      const taskList = document.createElement("ul");
+      for (let task of project.tasks) {
+        const taskLI = document.createElement("li");
+        taskLI.textContent = task.title;
+        taskList.appendChild(taskLI);
+      }
+      projectCard.appendChild(taskList);
+      const deleteProjectButton = document.createElement("button");
+      deleteProjectButton.classList.add("del-project-btn");
+      deleteProjectButton.textContent = "X delete project";
+      deleteProjectButton.dataset.projectId = project.id;
+      deleteProjectButton.dataset.type = "del-project";
+      projectCard.appendChild(deleteProjectButton); */
+
+      //Project.testing(project);
+      //const projectCard = Project.createDOMElement(project);
+      const projectCard = ProjectComponent(project);
       projectContainer.appendChild(projectCard);
     }
     state.syncStorage();
@@ -116,8 +154,7 @@ console.log(state.getProjects()); */
 const testProject2 = Project("Testo2");
 const testProject3 = Project("Testo3"); */
 //testProject.addTask(Todo(testProject.id));
-state.createProject("Testo1");
+/* state.createProject("Testo1");
 state.createProject("Testo2");
-state.createProject("Testo3");
-console.log(state.getProjects()[0].title);
+state.createProject("Testo3"); */
 GUI.refresh();
