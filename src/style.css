@@ -62,7 +62,7 @@ ul {
   align-items: flex-start;
 }
 .project-expanded {
-  flex: 0 1 600px;
+  flex: 0 1 800px;
   border: 1px solid #bbb;
   border-radius: 10px;
   min-height: 10rem;
@@ -80,10 +80,13 @@ ul {
 }
 .task-input:not([type="checkbox"]),
 .task-input:not([type="checkbox"]):focus {
-  max-width: 13ch;
+  max-width: 10ch;
   margin-right: 1rem;
   border: none;
   outline: none;
+}
+.task-input[type="text"] {
+  max-width: 18ch;
 }
 .completed-task-container > .task-item {
   opacity: 0.6;

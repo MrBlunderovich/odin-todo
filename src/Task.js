@@ -56,44 +56,6 @@ export default function Task(
   };
 }
 
-/* export function TaskComponent1(task) {
-  const taskElement = document.createElement("li");
-  taskElement.classList.add("task-item");
-
-  const titleElement = document.createElement("input");
-  titleElement.classList.add("task-title", "task-input");
-  titleElement.value = task.title;
-
-  const descriptionElement = document.createElement("input");
-  descriptionElement.classList.add("task-deacription", "task-input");
-  descriptionElement.value = task.description;
-
-  const dateElement = document.createElement("input");
-  dateElement.classList.add("task-date", "task-input");
-  dateElement.value = task.dueDate;
-
-  const priorityElement = document.createElement("input");
-  priorityElement.classList.add("task-priority", "task-input");
-  priorityElement.value = task.priority;
-
-  taskElement.appendChild(titleElement);
-  taskElement.appendChild(descriptionElement);
-  taskElement.appendChild(dateElement);
-  taskElement.appendChild(priorityElement);
-  return taskElement;
-} */
-/* export function TaskComponent(task) {
-  console.log(task);
-  const taskElement = document.createElement("li");
-  taskElement.classList.add("task-item");
-  taskElement.innerHTML = `
-  <input type="text" class="task-input task-title" value="${task.title}"/>
-  <input type="text" class="task-input task-deacription" value="${task.description}"/>
-  <input type="date" class="task-input task-date" value="${task.dueDate}"/>
-  <input type="text" class="task-input task-priority" value="${task.priority}"/>
-`;
-  return taskElement;
-} */
 export function TaskComponent(task) {
   const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
@@ -117,21 +79,39 @@ function TaskInput(task, fieldType) {
     case "isCompleted":
       inputType = "checkbox";
       break;
+    case "priority":
+      inputType = "select";
+      break;
     default:
       inputType = "text";
       break;
   }
-  const element = document.createElement("input");
-  element.type = inputType;
-  element.classList.add("task-input", `task-${fieldType}`);
-  element.value = task[fieldType];
-  if (element.type === "checkbox") {
-    element.checked = task.isCompleted;
+  if (inputType === "select") {
+    const element = document.createElement("select");
+    element.classList.add("task-input", `task-${fieldType}`);
+    element.dataset.projectId = task.projectId;
+    element.dataset.taskId = task.id;
+    element.dataset.type = fieldType;
+    for (let option of ["normal", "high", "low"]) {
+      const optionElement = document.createElement("option");
+      optionElement.innerText = option;
+      element.appendChild(optionElement);
+    }
+    element.value = task[fieldType];
+    return element;
+  } else {
+    const element = document.createElement("input");
+    element.type = inputType;
+    element.classList.add("task-input", `task-${fieldType}`);
+    element.value = task[fieldType];
+    if (element.type === "checkbox") {
+      element.checked = task.isCompleted;
+    }
+    element.dataset.projectId = task.projectId;
+    element.dataset.taskId = task.id;
+    element.dataset.type = fieldType;
+    return element;
   }
-  element.dataset.projectId = task.projectId;
-  element.dataset.taskId = task.id;
-  element.dataset.type = fieldType;
-  return element;
 }
 
 function TaskDeleteButton(task) {

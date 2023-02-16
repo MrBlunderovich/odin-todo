@@ -146,15 +146,19 @@ const GUI = (function () {
   }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
+    console.log(event);
+    console.log(event.target.value);
     const taskId = event.target.dataset.taskId;
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
     if (fieldType === "isCompleted") {
-      console.log(event);
       targetTask.isCompleted = event.target.checked;
       refresh();
     } else {
+      console.log({ fieldType });
       targetTask[fieldType] = event.target.value;
+      console.log(targetTask);
+      console.log(state.getProjects()[0].tasks[0]);
       refresh("exceptTasks");
     }
     //state.syncStorage();
