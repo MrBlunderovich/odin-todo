@@ -71,7 +71,7 @@ state.loadProjects();
 
 //////////////////////////////////////////////////////////////////////
 const GUI = (function () {
-  const projectContainer = document.querySelector(".project-container");
+  const projectsContainer = document.querySelector(".project-container");
   const newProjectButton = document.querySelector(".new-project");
   const expandedProjectDiv = document.querySelector(".project-expanded");
   const projectTitle = document.querySelector(".project-expanded-title");
@@ -111,7 +111,7 @@ const GUI = (function () {
     //const newProject = Project();
   }
 
-  projectContainer.addEventListener("click", handleSidebarClicks);
+  projectsContainer.addEventListener("click", handleSidebarClicks);
   function handleSidebarClicks(event) {
     const clickSource = event.target.dataset.type;
     if (!clickSource) {
@@ -174,11 +174,6 @@ const GUI = (function () {
 
   function refresh(exception) {
     console.log("GUI.refresh invoked");
-    //const focusedElement = document.querySelector(".project-expanded input:focus");
-    //const focusedElement
-    //if (focusedElement) {
-    //}
-    //console.log(focusedElement);
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
     if (exception !== "exceptTasks") {
@@ -190,7 +185,6 @@ const GUI = (function () {
         //return;
       } else {
         projectTitle.value = topProject.title;
-        //taskContainer.innerHTML = "";
         for (let task of topProject.tasks) {
           const taskElement = TaskComponent(task);
           if (task.isCompleted) {
@@ -201,10 +195,10 @@ const GUI = (function () {
         }
       }
     }
-    projectContainer.innerHTML = "";
+    projectsContainer.innerHTML = "";
     for (let project of currentProjects) {
       const projectCard = ProjectComponent(project);
-      projectContainer.appendChild(projectCard);
+      projectsContainer.appendChild(projectCard);
     }
     state.syncStorage();
     ////

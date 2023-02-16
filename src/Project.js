@@ -50,9 +50,11 @@ export function ProjectComponent(project) {
   projectCard.textContent = project.title;
   const taskList = document.createElement("ul");
   for (let task of project.tasks) {
-    const taskLI = document.createElement("li");
-    taskLI.textContent = task.title;
-    taskList.appendChild(taskLI);
+    if (!task.isCompleted) {
+      const taskLI = document.createElement("li");
+      taskLI.textContent = task.title;
+      taskList.appendChild(taskLI);
+    }
   }
   projectCard.appendChild(taskList);
   const deleteProjectButton = document.createElement("button");
