@@ -28,7 +28,7 @@ export default function Project(
       return _title;
     },
     set title(newTitle) {
-      title = newTitle;
+      _title = newTitle;
     },
     get tasks() {
       return _tasks;

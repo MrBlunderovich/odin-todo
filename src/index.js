@@ -109,7 +109,7 @@ const GUI = (function () {
   function handleSidebarClicks(event) {
     const clickSource = event.target.dataset.type;
     if (!clickSource) {
-      console.log("handleSidebarClicks failed");
+      console.warn("handleSidebarClicks failed");
       console.log(event);
       return;
     }
@@ -123,15 +123,26 @@ const GUI = (function () {
     }
   }
 
-  expandedProjectDiv.addEventListener("change", handleTaskInputChange);
+  expandedProjectDiv.addEventListener("change", handleProjectInputChange);
+  function handleProjectInputChange(event) {
+    if (event.target.id === "project-expanded-title") {
+      console.log("changing project title");
+      if (topProject) {
+        topProject.title = event.target.value;
+      } else {
+        console.warn("no project to change title of");
+      }
+    } else {
+      handleTaskInputChange(event);
+    }
+    refresh();
+  }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
     const taskId = event.target.dataset.taskId;
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
     targetTask[fieldType] = event.target.value;
-
-    state.syncStorage();
   }
 
   function refresh() {
@@ -141,10 +152,10 @@ const GUI = (function () {
     taskContainer.innerHTML = "";
     if (!topProject) {
       console.warn("GUI.refresh: no projects available");
-      projectTitle.textContent = "Let's start a new project!";
+      projectTitle.value = "Let's start a new project!";
       //return;
     } else {
-      projectTitle.textContent = topProject.title;
+      projectTitle.value = topProject.title;
       //taskContainer.innerHTML = "";
       for (let task of topProject.tasks) {
         const taskElement = TaskComponent(task);
