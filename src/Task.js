@@ -125,6 +125,9 @@ function TaskInput(task, fieldType) {
   element.type = inputType;
   element.classList.add("task-input", `task-${fieldType}`);
   element.value = task[fieldType];
+  if (element.type === "checkbox") {
+    element.checked = task.isCompleted;
+  }
   element.dataset.projectId = task.projectId;
   element.dataset.taskId = task.id;
   element.dataset.type = fieldType;

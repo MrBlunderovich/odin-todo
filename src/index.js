@@ -76,6 +76,9 @@ const GUI = (function () {
   const expandedProjectDiv = document.querySelector(".project-expanded");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
+  const completedTaskContainer = document.querySelector(
+    ".completed-task-container"
+  );
   let topProject = undefined;
 
   expandedProjectDiv.addEventListener("click", handleProjectClicks);
@@ -132,20 +135,28 @@ const GUI = (function () {
       console.log("changing project title");
       if (topProject) {
         topProject.title = event.target.value;
+        refresh();
       } else {
         console.warn("no project to change title of");
       }
     } else {
       handleTaskInputChange(event);
+      //special refresh?
     }
-    refresh("exceptTasks");
   }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
     const taskId = event.target.dataset.taskId;
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
-    targetTask[fieldType] = event.target.value;
+    if (fieldType === "isCompleted") {
+      console.log(event);
+      targetTask.isCompleted = event.target.checked;
+      refresh();
+    } else {
+      targetTask[fieldType] = event.target.value;
+      refresh("exceptTasks");
+    }
     //state.syncStorage();
   }
 
@@ -155,7 +166,6 @@ const GUI = (function () {
     if (event.keyCode === 13) {
       //make input lose focus and so trigger 'change' events
       event.target.blur();
-      console.log(event);
       if (event.ctrlKey && topProject) {
         createNewTask();
       }
@@ -173,6 +183,7 @@ const GUI = (function () {
     topProject = currentProjects[0];
     if (exception !== "exceptTasks") {
       taskContainer.innerHTML = "";
+      completedTaskContainer.innerHTML = "";
       if (!topProject) {
         console.warn("GUI.refresh: no projects available");
         projectTitle.value = "Let's start a new project!";
@@ -182,7 +193,11 @@ const GUI = (function () {
         //taskContainer.innerHTML = "";
         for (let task of topProject.tasks) {
           const taskElement = TaskComponent(task);
-          taskContainer.appendChild(taskElement);
+          if (task.isCompleted) {
+            completedTaskContainer.appendChild(taskElement);
+          } else {
+            taskContainer.appendChild(taskElement);
+          }
         }
       }
     }
@@ -192,6 +207,10 @@ const GUI = (function () {
       projectContainer.appendChild(projectCard);
     }
     state.syncStorage();
+    ////
+    document.querySelector(".testOutput").textContent = JSON.stringify(
+      state.getProjects()[0].tasks.map((task) => task.isCompleted)
+    );
   }
 
   return {
