@@ -145,6 +145,13 @@ const GUI = (function () {
     targetTask[fieldType] = event.target.value;
   }
 
+  expandedProjectDiv.addEventListener("keyup", handleKeyUp);
+  function handleKeyUp(event) {
+    if (event.keyCode === 13) {
+      event.target.blur();
+    }
+  }
+
   function refresh() {
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
