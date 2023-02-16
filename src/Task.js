@@ -5,7 +5,7 @@ export default function Task(
   title = "Task title",
   description = "Description",
   dueDate = new Date(),
-  priority = "medium-priority",
+  priority = "medium",
   isCompleted = false
 ) {
   const _id = nanoid();
@@ -95,7 +95,7 @@ export default function Task(
   return taskElement;
 } */
 export function TaskComponent(task) {
-  const taskElement = document.createElement("form");
+  const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
 
   taskElement.appendChild(TaskInput(task, "isCompleted"));
@@ -103,6 +103,7 @@ export function TaskComponent(task) {
   taskElement.appendChild(TaskInput(task, "description"));
   taskElement.appendChild(TaskInput(task, "dueDate"));
   taskElement.appendChild(TaskInput(task, "priority"));
+  taskElement.appendChild(TaskDeleteButton(task));
 
   return taskElement;
 }
@@ -128,4 +129,14 @@ function TaskInput(task, fieldType) {
   element.dataset.taskId = task.id;
   element.dataset.type = fieldType;
   return element;
+}
+
+function TaskDeleteButton(task) {
+  const button = document.createElement("button");
+  button.type = "button";
+  button.classList.add("task-delete");
+  button.textContent = "Del";
+  button.dataset.taskId = task.id;
+  button.dataset.type = "delete-task";
+  return button;
 }

@@ -53,6 +53,7 @@ const state = (function () {
     _projects.unshift(_projects.splice(index, 1)[0]);
   }
   function syncStorage() {
+    console.log("uploading projects to localStorage");
     localStorage.setItem("projects", JSON.stringify(_projects));
   }
 
@@ -70,11 +71,9 @@ state.loadProjects();
 
 //////////////////////////////////////////////////////////////////////
 const GUI = (function () {
-  //const sidebar = document.querySelector(".sidebar");
   const projectContainer = document.querySelector(".project-container");
   const newProjectButton = document.querySelector(".new-project");
   const expandedProjectDiv = document.querySelector(".project-expanded");
-  const newTaskButton = document.querySelector(".new-item");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
   let topProject = undefined;
@@ -83,10 +82,18 @@ const GUI = (function () {
   function handleProjectClicks(event) {
     if (event.target.dataset.type === "add-task") {
       console.log("GUI.createNewTask invoked");
-      console.log(topProject);
-      console.log(state.getProjects()[0]);
-      console.log(state.getProjects()[0].newTask());
-      //topProject.newTask(); //////////////////////////?????
+      if (!topProject) {
+        console.log("no projects yet");
+        createNewProject();
+      }
+      topProject.newTask();
+      refresh();
+      document
+        .querySelector(".task-container .task-item:last-child input.task-title")
+        .select();
+    } else if (event.target.dataset.type === "delete-task") {
+      console.log("GUI deleting task");
+      topProject.removeTask(event.target.dataset.taskId);
       refresh();
     }
   }
@@ -131,51 +138,25 @@ const GUI = (function () {
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
-    if (!topProject) {
-      console.log("GUI.refresh failed");
-      return;
-    }
-    projectTitle.textContent = topProject.title;
     taskContainer.innerHTML = "";
-    for (let task of topProject.tasks) {
-      /* const taskElement = document.createElement("li");
-      taskElement.classList.add("task-item");
-      taskElement.textContent = `${task.title} ${task.description} ${task.priority}`;
-       */
-      const taskElement = TaskComponent(task);
-      taskContainer.appendChild(taskElement);
+    if (!topProject) {
+      console.warn("GUI.refresh: no projects available");
+      projectTitle.textContent = "Let's start a new project!";
+      //return;
+    } else {
+      projectTitle.textContent = topProject.title;
+      //taskContainer.innerHTML = "";
+      for (let task of topProject.tasks) {
+        const taskElement = TaskComponent(task);
+        taskContainer.appendChild(taskElement);
+      }
     }
     projectContainer.innerHTML = "";
     for (let project of currentProjects) {
-      /* const projectCard = document.createElement("div");
-      projectCard.classList.add("card");
-      projectCard.dataset.id = project.id;
-      projectCard.dataset.type = "project-card";
-      projectCard.textContent = project.title;
-      const taskList = document.createElement("ul");
-      for (let task of project.tasks) {
-        const taskLI = document.createElement("li");
-        taskLI.textContent = task.title;
-        taskList.appendChild(taskLI);
-      }
-      projectCard.appendChild(taskList);
-      const deleteProjectButton = document.createElement("button");
-      deleteProjectButton.classList.add("del-project-btn");
-      deleteProjectButton.textContent = "X delete project";
-      deleteProjectButton.dataset.projectId = project.id;
-      deleteProjectButton.dataset.type = "del-project";
-      projectCard.appendChild(deleteProjectButton); */
-
-      //Project.testing(project);
-      //const projectCard = Project.createDOMElement(project);
       const projectCard = ProjectComponent(project);
       projectContainer.appendChild(projectCard);
     }
     state.syncStorage();
-
-    /* document.querySelectorAll(".task-input").forEach((input) => {
-      input.addEventListener("change", (event) => console.log(event));
-    }); */
   }
 
   return {
@@ -184,13 +165,4 @@ const GUI = (function () {
   };
 })();
 
-/* state.loadProjects();
-console.log(state.getProjects()); */
-/* const testProject = Project("Testo");
-const testProject2 = Project("Testo2");
-const testProject3 = Project("Testo3"); */
-//testProject.addTask(Todo(testProject.id));
-/* state.createProject("Testo1");
-state.createProject("Testo2");
-state.createProject("Testo3"); */
 GUI.refresh();

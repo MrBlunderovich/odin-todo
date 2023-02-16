@@ -78,8 +78,8 @@ ul {
 .new-item {
   padding: 0.5rem 2rem;
 }
-.task-input,
-.task-input:focus {
+.task-input:not([type="checkbox"]),
+.task-input:not([type="checkbox"]):focus {
   max-width: 13ch;
   margin-right: 1rem;
   border: none;
