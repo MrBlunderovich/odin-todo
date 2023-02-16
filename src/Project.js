@@ -47,7 +47,9 @@ export function ProjectComponent(project) {
   projectCard.classList.add("card");
   projectCard.dataset.id = project.id;
   projectCard.dataset.type = "project-card";
-  projectCard.textContent = project.title;
+  const header = document.createElement("h3");
+  header.textContent = project.title;
+  projectCard.appendChild(header);
   const taskList = document.createElement("ul");
   for (let task of project.tasks) {
     if (!task.isCompleted) {
