@@ -81,21 +81,24 @@ const GUI = (function () {
   expandedProjectDiv.addEventListener("click", handleProjectClicks);
   function handleProjectClicks(event) {
     if (event.target.dataset.type === "add-task") {
-      console.log("GUI.createNewTask invoked");
-      if (!topProject) {
-        console.log("no projects yet");
-        createNewProject();
-      }
-      topProject.newTask();
-      refresh();
-      document
-        .querySelector(".task-container .task-item:last-child input.task-title")
-        .select();
+      createNewTask();
     } else if (event.target.dataset.type === "delete-task") {
       console.log("GUI deleting task");
       topProject.removeTask(event.target.dataset.taskId);
       refresh();
     }
+  }
+  function createNewTask() {
+    console.log("GUI.createNewTask invoked");
+    if (!topProject) {
+      console.log("no projects yet");
+      createNewProject();
+    }
+    topProject.newTask();
+    refresh();
+    document
+      .querySelector(".task-container .task-item:last-child input.task-title")
+      .select();
   }
 
   newProjectButton.addEventListener("click", createNewProject);
@@ -135,7 +138,7 @@ const GUI = (function () {
     } else {
       handleTaskInputChange(event);
     }
-    refresh();
+    refresh("exceptTasks");
   }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
@@ -143,30 +146,44 @@ const GUI = (function () {
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
     targetTask[fieldType] = event.target.value;
+    //state.syncStorage();
   }
 
   expandedProjectDiv.addEventListener("keyup", handleKeyUp);
   function handleKeyUp(event) {
+    event.stopPropagation();
     if (event.keyCode === 13) {
+      //make input lose focus and so trigger 'change' events
       event.target.blur();
+      console.log(event);
+      if (event.ctrlKey && topProject) {
+        createNewTask();
+      }
     }
   }
 
-  function refresh() {
+  function refresh(exception) {
     console.log("GUI.refresh invoked");
+    //const focusedElement = document.querySelector(".project-expanded input:focus");
+    //const focusedElement
+    //if (focusedElement) {
+    //}
+    //console.log(focusedElement);
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
-    taskContainer.innerHTML = "";
-    if (!topProject) {
-      console.warn("GUI.refresh: no projects available");
-      projectTitle.value = "Let's start a new project!";
-      //return;
-    } else {
-      projectTitle.value = topProject.title;
-      //taskContainer.innerHTML = "";
-      for (let task of topProject.tasks) {
-        const taskElement = TaskComponent(task);
-        taskContainer.appendChild(taskElement);
+    if (exception !== "exceptTasks") {
+      taskContainer.innerHTML = "";
+      if (!topProject) {
+        console.warn("GUI.refresh: no projects available");
+        projectTitle.value = "Let's start a new project!";
+        //return;
+      } else {
+        projectTitle.value = topProject.title;
+        //taskContainer.innerHTML = "";
+        for (let task of topProject.tasks) {
+          const taskElement = TaskComponent(task);
+          taskContainer.appendChild(taskElement);
+        }
       }
     }
     projectContainer.innerHTML = "";
