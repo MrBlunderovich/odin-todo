@@ -85,3 +85,17 @@ ul {
   border: none;
   outline: none;
 }
+.completed-task-container > .task-item {
+  opacity: 0.6;
+}
+/* .completed-task-container{
+  position: relative;
+} */
+.completed-task-container > .task-item::after {
+  content: " ";
+  display: block;
+  margin-left: 1rem;
+  height: 1px;
+  background-color: black;
+  transform: translateY(-0.8rem);
+}
