@@ -5,7 +5,7 @@ export default function Task(
   title = "Task title",
   description = "Description",
   dueDate = new Date(),
-  priority = "medium",
+  priority = "",
   isCompleted = false
 ) {
   const _id = nanoid();

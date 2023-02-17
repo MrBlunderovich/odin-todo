@@ -114,7 +114,15 @@ const GUI = (function () {
   projectsContainer.addEventListener("click", handleSidebarClicks);
   function handleSidebarClicks(event) {
     const clickSource = event.target.dataset.type;
-    if (!clickSource) {
+    if (clickSource === "del-project") {
+      const projectId = event.target.dataset.projectId;
+      state.removeProject(projectId);
+    } else if (event.target.id !== "project-container") {
+      console.log("GUI.selectProject invoked");
+      state.selectProject(event.target.dataset.id);
+      refresh();
+    }
+    /* if (!clickSource) {
       console.warn("handleSidebarClicks failed");
       console.log(event);
       return;
@@ -123,10 +131,7 @@ const GUI = (function () {
       console.log("GUI.selectProject invoked");
       state.selectProject(event.target.dataset.id);
       refresh();
-    } else if (clickSource === "del-project") {
-      const projectId = event.target.dataset.projectId;
-      state.removeProject(projectId);
-    }
+    } else  */
   }
 
   expandedProjectDiv.addEventListener("change", handleProjectInputChange);
