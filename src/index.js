@@ -108,7 +108,6 @@ const GUI = (function () {
   function createNewProject() {
     console.log("GUI.createNewProject invoked");
     state.createProject("New project");
-    //const newProject = Project();
   }
 
   projectsContainer.addEventListener("click", handleSidebarClicks);
@@ -122,16 +121,6 @@ const GUI = (function () {
       state.selectProject(event.target.dataset.id);
       refresh();
     }
-    /* if (!clickSource) {
-      console.warn("handleSidebarClicks failed");
-      console.log(event);
-      return;
-    }
-    if (clickSource === "project-card") {
-      console.log("GUI.selectProject invoked");
-      state.selectProject(event.target.dataset.id);
-      refresh();
-    } else  */
   }
 
   expandedProjectDiv.addEventListener("change", handleProjectInputChange);
@@ -139,20 +128,17 @@ const GUI = (function () {
     if (event.target.id === "project-expanded-title") {
       console.log("changing project title");
       if (topProject) {
-        topProject.title = event.target.value;
+        topProject.title = capitalize(event.target.value);
         refresh();
       } else {
         console.warn("no project to change title of");
       }
     } else {
       handleTaskInputChange(event);
-      //special refresh?
     }
   }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
-    console.log(event);
-    console.log(event.target.value);
     const taskId = event.target.dataset.taskId;
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
@@ -160,13 +146,17 @@ const GUI = (function () {
       targetTask.isCompleted = event.target.checked;
       refresh();
     } else {
-      console.log({ fieldType });
-      targetTask[fieldType] = event.target.value;
-      console.log(targetTask);
-      console.log(state.getProjects()[0].tasks[0]);
+      if (fieldType === "title") {
+        targetTask[fieldType] = capitalize(event.target.value);
+      } else {
+        targetTask[fieldType] = event.target.value;
+      }
       refresh("exceptTasks");
     }
-    //state.syncStorage();
+  }
+
+  function capitalize(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   expandedProjectDiv.addEventListener("keyup", handleKeyUp);
@@ -191,7 +181,6 @@ const GUI = (function () {
       if (!topProject) {
         console.warn("GUI.refresh: no projects available");
         projectTitle.value = "Let's start a new project!";
-        //return;
       } else {
         projectTitle.value = topProject.title;
         for (let task of topProject.tasks) {
