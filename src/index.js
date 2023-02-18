@@ -116,6 +116,15 @@ const GUI = (function () {
     if (clickSource === "del-project") {
       const projectId = event.target.dataset.projectId;
       state.removeProject(projectId);
+    } else if (clickSource === "task-complete") {
+      const projectId = event.target.dataset.projectId;
+      const taskId = event.target.dataset.id;
+      const targetProject = state
+        .getProjects()
+        .find((project) => project.id === projectId);
+      const targetTask = targetProject.tasks.find((task) => task.id === taskId);
+      targetTask.isCompleted = true;
+      refresh();
     } else if (event.target.id !== "project-container") {
       console.log("GUI.selectProject invoked");
       state.selectProject(event.target.dataset.projectId);

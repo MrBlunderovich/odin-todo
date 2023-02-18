@@ -55,7 +55,15 @@ export function ProjectComponent(project) {
   for (let task of project.tasks) {
     if (!task.isCompleted) {
       const taskLI = document.createElement("li");
-      taskLI.textContent = task.title;
+      const taskTitle = document.createElement("span");
+      taskTitle.textContent = task.title;
+      const taskCheckbox = document.createElement("input");
+      taskCheckbox.type = "checkbox";
+      taskCheckbox.dataset.id = task.id;
+      taskCheckbox.dataset.projectId = project.id;
+      taskCheckbox.dataset.type = "task-complete";
+      taskLI.appendChild(taskCheckbox);
+      taskLI.appendChild(taskTitle);
       taskList.appendChild(taskLI);
     }
   }
