@@ -26,6 +26,13 @@
   padding: 0 3rem;
   position: fixed;
 }
+.avatar {
+  border-radius: 50%;
+  height: 4rem;
+  width: 4rem;
+  background-color: var(--dark-blue);
+  margin-left: auto;
+}
 .page-container {
   background-color: var(--yellow);
   display: grid;
@@ -159,13 +166,13 @@
   max-width: 18ch;
 }
 select.task-input:has(option[value="high"]:checked) {
-  background-color: rgb(255, 170, 159);
+  background-color: rgb(255, 179, 169);
 }
 select.task-input:has(option[value="normal"]:checked) {
   background-color: rgb(255, 234, 163);
 }
 select.task-input:has(option[value="low"]:checked) {
-  background-color: rgb(162, 233, 255);
+  background-color: rgb(185, 239, 255);
 }
 .completed-task-container > .task-item {
   opacity: 0.6;

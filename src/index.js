@@ -54,11 +54,16 @@ const state = (function () {
     _projects.unshift(_projects.splice(index, 1)[0]);
   }
   function getTaskById(taskId) {
+    console.log("state.getTaskById invoked");
     for (let project of _projects) {
-      return project.tasks.find((task) => task.id === taskId);
+      const result = project.tasks.find((task) => task.id === taskId);
+      if (result) {
+        return result;
+      }
     }
   }
   function getProjectById(projectId) {
+    console.log("state.getProjectById invoked");
     return _projects.find((project) => project.id === projectId);
   }
   function syncStorage() {
@@ -132,7 +137,9 @@ const GUI = (function () {
       }
     } else if (clickSource === "task-complete") {
       const taskId = event.target.dataset.id;
+      console.log(taskId);
       const targetTask = state.getTaskById(taskId);
+      console.log(targetTask);
       targetTask.isCompleted = true;
       refresh();
     } else if (event.target.id !== "project-container") {
