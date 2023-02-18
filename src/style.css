@@ -29,13 +29,14 @@
 .page-container {
   background-color: var(--yellow);
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: minmax(220px, 300px) 1fr;
   grid-template-rows: 1fr;
+  gap: 2rem;
   min-height: 100vh;
   padding-top: 5.5rem;
 }
 .sidebar {
-  width: 220px;
+  /* width: 220px; */
   padding: 1rem;
   grid-column: 1;
   grid-row: 2;
@@ -92,7 +93,7 @@
 .main {
   grid-column: 2;
   grid-row: 2;
-  padding: 1rem 3rem;
+  padding: 1rem 3rem 1rem 0;
   display: flex;
   justify-content: center;
   align-items: flex-start;
