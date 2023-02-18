@@ -61,7 +61,7 @@ export function ProjectComponent(project) {
   projectCard.appendChild(taskList);
   const deleteProjectButton = document.createElement("button");
   deleteProjectButton.classList.add("del-project-btn");
-  deleteProjectButton.textContent = "X delete project";
+  deleteProjectButton.textContent = "x Delete project";
   deleteProjectButton.dataset.projectId = project.id;
   deleteProjectButton.dataset.type = "del-project";
   projectCard.appendChild(deleteProjectButton);

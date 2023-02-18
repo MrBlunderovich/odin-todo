@@ -2,8 +2,8 @@ import { nanoid } from "nanoid";
 
 export default function Task(
   projectId,
-  title = "Task title",
-  description = "Description",
+  title = "El tasco",
+  description = "description",
   dueDate = new Date(),
   priority = "",
   isCompleted = false

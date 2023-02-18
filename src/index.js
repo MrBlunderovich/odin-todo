@@ -199,10 +199,6 @@ const GUI = (function () {
       projectsContainer.appendChild(projectCard);
     }
     state.syncStorage();
-    ////
-    document.querySelector(".testOutput").textContent = JSON.stringify(
-      state.getProjects()[0].tasks.map((task) => task.isCompleted)
-    );
   }
 
   return {
