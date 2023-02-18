@@ -98,7 +98,7 @@
 }
 .project-expanded {
   background-color: white;
-  flex: 0 1 800px;
+  flex: 0 1 1000px;
   border: 1px solid var(--dark-blue);
   border-radius: 10px;
   min-height: 10rem;
