@@ -53,6 +53,14 @@ const state = (function () {
     const index = _projects.findIndex((project) => project.id === projectId);
     _projects.unshift(_projects.splice(index, 1)[0]);
   }
+  function getTaskById(taskId) {
+    for (let project of _projects) {
+      return project.tasks.find((task) => task.id === taskId);
+    }
+  }
+  function getProjectById(projectId) {
+    return _projects.find((project) => project.id === projectId);
+  }
   function syncStorage() {
     console.log("uploading projects to localStorage");
     localStorage.setItem("projects", JSON.stringify(_projects));
@@ -65,6 +73,8 @@ const state = (function () {
     loadProjects,
     selectProject,
     syncStorage,
+    getTaskById,
+    getProjectById,
   };
 })();
 
@@ -115,16 +125,14 @@ const GUI = (function () {
   function handleSidebarClicks(event) {
     const clickSource = event.target.dataset.type;
     const projectId = event.target.dataset.projectId;
-    const targetProject = state
-      .getProjects()
-      .find((project) => project.id === projectId);
+    const targetProject = state.getProjectById(projectId);
     if (clickSource === "del-project") {
       if (confirm(`Please confirm removing "${targetProject.title}" project`)) {
         state.removeProject(projectId);
       }
     } else if (clickSource === "task-complete") {
       const taskId = event.target.dataset.id;
-      const targetTask = targetProject.tasks.find((task) => task.id === taskId);
+      const targetTask = state.getTaskById(taskId);
       targetTask.isCompleted = true;
       refresh();
     } else if (event.target.id !== "project-container") {
