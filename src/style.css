@@ -127,7 +127,7 @@
   outline: none;
   margin-bottom: 2rem;
 }
-.new-task {
+.new-task-btn {
   padding: 0.5rem 2rem;
   border: none;
   border-top: 1px solid var(--dark-blue);
@@ -140,7 +140,7 @@
   transition: background-color 0.1s;
   margin: 1rem 0;
 }
-.new-task:active {
+.new-task-btn:active {
   background-color: var(--yellow);
 }
 
@@ -158,11 +158,15 @@
 .completed-task-container > .task-item {
   opacity: 0.6;
 }
-.completed-task-container > .task-item::after {
+/* .completed-task-container > .task-item::after {
   content: " ";
   display: block;
   margin-left: 1rem;
   height: 1px;
   background-color: var(--dark-blue);
   transform: translateY(-0.8rem);
+} */
+input[type="checkbox"] {
+  accent-color: var(--dark-blue);
+  margin-right: 0.5rem;
 }
