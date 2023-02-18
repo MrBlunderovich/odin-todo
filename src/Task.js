@@ -95,6 +95,7 @@ function TaskInput(task, fieldType) {
     for (let option of ["normal", "high", "low"]) {
       const optionElement = document.createElement("option");
       optionElement.innerText = option;
+      optionElement.value = option;
       element.appendChild(optionElement);
     }
     element.value = task[fieldType];
