@@ -118,7 +118,7 @@ const GUI = (function () {
       state.removeProject(projectId);
     } else if (event.target.id !== "project-container") {
       console.log("GUI.selectProject invoked");
-      state.selectProject(event.target.dataset.id);
+      state.selectProject(event.target.dataset.projectId);
       refresh();
     }
   }

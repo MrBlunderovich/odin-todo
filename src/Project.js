@@ -46,6 +46,7 @@ export function ProjectComponent(project) {
   const projectCard = document.createElement("div");
   projectCard.classList.add("card");
   projectCard.dataset.id = project.id;
+  projectCard.dataset.projectId = project.id;
   projectCard.dataset.type = "project-card";
   const header = document.createElement("h3");
   header.textContent = project.title;
@@ -61,9 +62,10 @@ export function ProjectComponent(project) {
   projectCard.appendChild(taskList);
   const deleteProjectButton = document.createElement("button");
   deleteProjectButton.classList.add("del-project-btn");
-  deleteProjectButton.textContent = "x Delete project";
-  deleteProjectButton.dataset.projectId = project.id;
+  deleteProjectButton.textContent = "Delete project";
   deleteProjectButton.dataset.type = "del-project";
   projectCard.appendChild(deleteProjectButton);
+  const elements = projectCard.querySelectorAll("*");
+  elements.forEach((element) => (element.dataset.projectId = project.id));
   return projectCard;
 }
