@@ -12,6 +12,7 @@ const state = (function () {
     const newProject = Project(title);
     _projects.unshift(newProject);
     GUI.refresh();
+    GUI.createNewTask();
   }
   function removeProject(id) {
     console.log("state.removeProject invoked");
@@ -113,21 +114,22 @@ const GUI = (function () {
   projectsContainer.addEventListener("click", handleSidebarClicks);
   function handleSidebarClicks(event) {
     const clickSource = event.target.dataset.type;
+    const projectId = event.target.dataset.projectId;
+    const targetProject = state
+      .getProjects()
+      .find((project) => project.id === projectId);
     if (clickSource === "del-project") {
-      const projectId = event.target.dataset.projectId;
-      state.removeProject(projectId);
+      if (confirm(`Please confirm removing "${targetProject.title}" project`)) {
+        state.removeProject(projectId);
+      }
     } else if (clickSource === "task-complete") {
-      const projectId = event.target.dataset.projectId;
       const taskId = event.target.dataset.id;
-      const targetProject = state
-        .getProjects()
-        .find((project) => project.id === projectId);
       const targetTask = targetProject.tasks.find((task) => task.id === taskId);
       targetTask.isCompleted = true;
       refresh();
     } else if (event.target.id !== "project-container") {
       console.log("GUI.selectProject invoked");
-      state.selectProject(event.target.dataset.projectId);
+      state.selectProject(projectId);
       refresh();
     }
   }
@@ -212,6 +214,7 @@ const GUI = (function () {
 
   return {
     refresh,
+    createNewTask,
     //
   };
 })();
