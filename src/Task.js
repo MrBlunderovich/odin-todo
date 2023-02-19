@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 export default function Task(
   projectId,
   title = "El tasco",
-  description = "description",
+  description = "",
   dueDate = new Date(),
   priority = "",
   isCompleted = false
@@ -107,6 +107,7 @@ function TaskInput(task, fieldType) {
     //element.value = task[fieldType];
     if (fieldType === "description") {
       element.value = task[fieldType].replaceAll("\n", " ");
+      element.placeholder = "...";
     } else {
       element.value = task[fieldType];
     }

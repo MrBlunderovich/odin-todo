@@ -196,7 +196,6 @@ const GUI = (function () {
 
   expandedProjectDiv.addEventListener("keyup", handleKeyUp);
   function handleKeyUp(event) {
-    console.log(event);
     event.stopPropagation();
     if (event.keyCode === 13) {
       //make input lose focus and so trigger 'change' events
@@ -219,7 +218,7 @@ const GUI = (function () {
     }
   }
 
-  document.addEventListener("click", handleDocumentClick);
+  document.addEventListener("mousedown", handleDocumentClick);
   function handleDocumentClick(event) {
     if (
       event.target.dataset.type === "modal-container" ||
