@@ -79,6 +79,9 @@ body {
   padding: 0.7rem 1rem 0.5rem 1rem;
   border-bottom: 1px solid var(--dark-blue);
 }
+.card input[type="checkbox"] {
+  margin-right: 1ch;
+}
 .del-project-btn,
 .description-modal-btn {
   background-color: transparent;
