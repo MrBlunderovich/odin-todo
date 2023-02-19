@@ -142,6 +142,7 @@ export function DescriptionModal(task) {
   modal.dataset.projectId = task.projectId;
   modal.dataset.type = "modal";
   const textArea = document.createElement("textarea");
+  textArea.id = "description-textarea";
   textArea.classList.add("description-modal-textarea");
   textArea.dataset.taskId = task.id;
   textArea.dataset.projectId = task.projectId;
@@ -151,7 +152,7 @@ export function DescriptionModal(task) {
   submitBtn.dataset.taskId = task.id;
   submitBtn.dataset.projectId = task.projectId;
   submitBtn.dataset.type = "modal-save";
-  submitBtn.textContent = "Save";
+  submitBtn.textContent = "Save (Ctrl+Enter)";
 
   modal.appendChild(textArea);
   modal.appendChild(submitBtn);

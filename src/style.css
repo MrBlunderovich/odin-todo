@@ -126,10 +126,29 @@ body {
   padding: 0 1rem;
   margin-bottom: 0.3rem;
   display: flex;
+  gap: 0.5rem;
 }
-/* .project-expanded li:nth-of-type(odd) {
-  background-color: var(--banana);
-} */
+.task-title {
+  flex: 3 1 auto;
+}
+.task-description {
+  flex: 1 1 8ch;
+}
+.task-dueDate {
+  flex: 0 0 13ch;
+  cursor: text;
+}
+.task-priority {
+  flex: 0 0 5ch;
+  cursor: pointer;
+}
+.task-delete {
+  border-radius: 0;
+  background-color: transparent;
+  border: 1px solid var(--dark-blue);
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+}
 .project-expanded-title,
 .project-expanded-title:focus {
   background-color: transparent;
@@ -141,6 +160,28 @@ body {
   border-radius: 10px 10px 0 0;
   outline: none;
   margin-bottom: 2rem;
+}
+.task-input:not([type="checkbox"]),
+.task-input:not([type="checkbox"]):focus {
+  background-color: transparent;
+  width: 10ch;
+  border: none;
+  outline: none;
+}
+.task-input[type="text"] {
+  text-overflow: ellipsis;
+}
+input[type="checkbox"] {
+  accent-color: var(--dark-blue);
+}
+select.task-input:has(option[value="high"]:checked) {
+  background-color: rgb(255, 179, 169);
+}
+select.task-input:has(option[value="normal"]:checked) {
+  background-color: rgb(255, 234, 163);
+}
+select.task-input:has(option[value="low"]:checked) {
+  background-color: rgb(185, 239, 255);
 }
 .new-task-btn {
   padding: 0.5rem 2rem;
@@ -158,28 +199,6 @@ body {
 .new-task-btn:active {
   background-color: var(--yellow);
 }
-
-.task-input:not([type="checkbox"]),
-.task-input:not([type="checkbox"]):focus {
-  background-color: transparent;
-  width: 10ch;
-  margin-right: 1rem;
-  border: none;
-  outline: none;
-}
-.task-input[type="text"] {
-  max-width: 18ch;
-  text-overflow: ellipsis;
-}
-select.task-input:has(option[value="high"]:checked) {
-  background-color: rgb(255, 179, 169);
-}
-select.task-input:has(option[value="normal"]:checked) {
-  background-color: rgb(255, 234, 163);
-}
-select.task-input:has(option[value="low"]:checked) {
-  background-color: rgb(185, 239, 255);
-}
 .completed-task-container > .task-item {
   opacity: 0.6;
 }
@@ -191,10 +210,6 @@ select.task-input:has(option[value="low"]:checked) {
   background-color: var(--dark-blue);
   transform: translateY(-0.8rem);
 } */
-input[type="checkbox"] {
-  accent-color: var(--dark-blue);
-  margin-right: 0.5rem;
-}
 .description-modal-container {
   position: absolute;
   top: 0;
@@ -204,9 +219,6 @@ input[type="checkbox"] {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.hidden {
-  display: none;
 }
 .description-modal-textarea {
   width: 500px;

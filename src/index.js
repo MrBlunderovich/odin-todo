@@ -2,7 +2,6 @@
 import "./style.css";
 import Task, { TaskComponent, DescriptionModal } from "./Task";
 import Project, { ProjectComponent } from "./Project";
-//import ProjectComponent from "./ProjectComponent";
 
 const state = (function () {
   let _projects = [];
@@ -109,6 +108,7 @@ const GUI = (function () {
       const taskId = event.target.dataset.taskId;
       const task = state.getTaskById(taskId);
       document.body.appendChild(DescriptionModal(task));
+      document.querySelector(".description-modal-textarea").focus();
     }
   }
   function createNewTask() {
@@ -191,6 +191,7 @@ const GUI = (function () {
 
   expandedProjectDiv.addEventListener("keyup", handleKeyUp);
   function handleKeyUp(event) {
+    console.log(event);
     event.stopPropagation();
     if (event.keyCode === 13) {
       //make input lose focus and so trigger 'change' events
@@ -201,26 +202,40 @@ const GUI = (function () {
     }
   }
 
+  document.addEventListener("keyup", handleDocumentKeyUp);
+  function handleDocumentKeyUp(event) {
+    if (
+      event.keyCode === 13 &&
+      event.ctrlKey &&
+      event.target.id === "description-textarea"
+    ) {
+      console.log("ctrl+enter!");
+      saveDescription(event);
+    }
+  }
+
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (
       event.target.dataset.type === "modal-container" ||
       event.target.dataset.type === "modal-save"
     ) {
-      const taskId = event.target.dataset.taskId;
-      const textAreaValue = document.querySelector(
-        ".description-modal-textarea"
-      ).value;
-      console.log(textAreaValue);
-      state.getTaskById(taskId).description = textAreaValue;
-      closeModal();
-      refresh();
+      saveDescription(event);
     }
-    function closeModal() {
-      document.body.removeChild(
-        document.querySelector(".description-modal-container")
-      );
-    }
+  }
+  function saveDescription(event) {
+    const taskId = event.target.dataset.taskId;
+    const textAreaValue = document.querySelector(
+      ".description-modal-textarea"
+    ).value;
+    state.getTaskById(taskId).description = textAreaValue;
+    closeModal();
+    refresh();
+  }
+  function closeModal() {
+    document.body.removeChild(
+      document.querySelector(".description-modal-container")
+    );
   }
 
   function refresh(exception) {
