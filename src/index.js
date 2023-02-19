@@ -102,8 +102,10 @@ const GUI = (function () {
       createNewTask();
     } else if (event.target.dataset.type === "delete-task") {
       console.log("GUI deleting task");
-      topProject.removeTask(event.target.dataset.taskId);
-      refresh();
+      if (confirm("Please confirm deleting task")) {
+        topProject.removeTask(event.target.dataset.taskId);
+        refresh();
+      }
     } else if (event.target.dataset.type === "description") {
       const taskId = event.target.dataset.taskId;
       const task = state.getTaskById(taskId);
