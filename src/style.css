@@ -13,6 +13,9 @@
   --dark-blue: #274d7d;
   font-family: "Roboto", sans-serif;
 }
+body {
+  position: relative;
+}
 .header {
   width: 100%;
   height: 5rem;
@@ -55,7 +58,8 @@
   gap: 10px;
   flex-direction: column;
 }
-.card {
+.card,
+.description-modal {
   background-color: white;
   border: 1px solid var(--dark-blue);
   border-radius: 10px;
@@ -75,7 +79,8 @@
   padding: 0.7rem 1rem 0.5rem 1rem;
   border-bottom: 1px solid var(--dark-blue);
 }
-.del-project-btn {
+.del-project-btn,
+.description-modal-btn {
   background-color: transparent;
   border: none;
   border-top: 1px solid var(--dark-blue);
@@ -157,13 +162,14 @@
 .task-input:not([type="checkbox"]),
 .task-input:not([type="checkbox"]):focus {
   background-color: transparent;
-  max-width: 10ch;
+  width: 10ch;
   margin-right: 1rem;
   border: none;
   outline: none;
 }
 .task-input[type="text"] {
   max-width: 18ch;
+  text-overflow: ellipsis;
 }
 select.task-input:has(option[value="high"]:checked) {
   background-color: rgb(255, 179, 169);
@@ -188,4 +194,27 @@ select.task-input:has(option[value="low"]:checked) {
 input[type="checkbox"] {
   accent-color: var(--dark-blue);
   margin-right: 0.5rem;
+}
+.description-modal-container {
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #ffffff55;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hidden {
+  display: none;
+}
+.description-modal-textarea {
+  width: 500px;
+  height: fit-content;
+  min-height: 10rem;
+  outline: none;
+  resize: none;
+  border: none;
+  background-color: transparent;
+  padding: 1rem;
 }

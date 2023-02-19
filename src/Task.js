@@ -104,7 +104,12 @@ function TaskInput(task, fieldType) {
     const element = document.createElement("input");
     element.type = inputType;
     element.classList.add("task-input", `task-${fieldType}`);
-    element.value = task[fieldType];
+    //element.value = task[fieldType];
+    if (fieldType === "description") {
+      element.value = task[fieldType].replaceAll("\n", " ");
+    } else {
+      element.value = task[fieldType];
+    }
     if (element.type === "checkbox") {
       element.checked = task.isCompleted;
     }
@@ -123,4 +128,34 @@ function TaskDeleteButton(task) {
   button.dataset.taskId = task.id;
   button.dataset.type = "delete-task";
   return button;
+}
+
+export function DescriptionModal(task) {
+  const modalContainer = document.createElement("div");
+  modalContainer.classList.add("description-modal-container");
+  modalContainer.dataset.taskId = task.id;
+  modalContainer.dataset.projectId = task.projectId;
+  modalContainer.dataset.type = "modal-container";
+  const modal = document.createElement("div");
+  modal.classList.add("description-modal");
+  modal.dataset.taskId = task.id;
+  modal.dataset.projectId = task.projectId;
+  modal.dataset.type = "modal";
+  const textArea = document.createElement("textarea");
+  textArea.classList.add("description-modal-textarea");
+  textArea.dataset.taskId = task.id;
+  textArea.dataset.projectId = task.projectId;
+  textArea.value = task.description;
+  const submitBtn = document.createElement("button");
+  submitBtn.classList.add("description-modal-btn");
+  submitBtn.dataset.taskId = task.id;
+  submitBtn.dataset.projectId = task.projectId;
+  submitBtn.dataset.type = "modal-save";
+  submitBtn.textContent = "Save";
+
+  modal.appendChild(textArea);
+  modal.appendChild(submitBtn);
+  modalContainer.appendChild(modal);
+
+  return modalContainer;
 }

@@ -1,6 +1,6 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
-import Task, { TaskComponent } from "./Task";
+import Task, { TaskComponent, DescriptionModal } from "./Task";
 import Project, { ProjectComponent } from "./Project";
 //import ProjectComponent from "./ProjectComponent";
 
@@ -105,6 +105,10 @@ const GUI = (function () {
       console.log("GUI deleting task");
       topProject.removeTask(event.target.dataset.taskId);
       refresh();
+    } else if (event.target.dataset.type === "description") {
+      const taskId = event.target.dataset.taskId;
+      const task = state.getTaskById(taskId);
+      document.body.appendChild(DescriptionModal(task));
     }
   }
   function createNewTask() {
@@ -194,6 +198,28 @@ const GUI = (function () {
       if (event.ctrlKey && topProject) {
         createNewTask();
       }
+    }
+  }
+
+  document.addEventListener("click", handleDocumentClick);
+  function handleDocumentClick(event) {
+    if (
+      event.target.dataset.type === "modal-container" ||
+      event.target.dataset.type === "modal-save"
+    ) {
+      const taskId = event.target.dataset.taskId;
+      const textAreaValue = document.querySelector(
+        ".description-modal-textarea"
+      ).value;
+      console.log(textAreaValue);
+      state.getTaskById(taskId).description = textAreaValue;
+      closeModal();
+      refresh();
+    }
+    function closeModal() {
+      document.body.removeChild(
+        document.querySelector(".description-modal-container")
+      );
     }
   }
 
