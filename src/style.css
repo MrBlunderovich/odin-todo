@@ -126,16 +126,17 @@ body {
   list-style-type: none;
 }
 .project-expanded li {
+  position: relative;
   padding: 0 1rem;
   margin-bottom: 0.3rem;
   display: flex;
   gap: 0.5rem;
 }
 .task-title {
-  flex: 3 1 auto;
+  flex: 2 1 auto;
 }
 .task-description {
-  flex: 1 1 8ch;
+  flex: 1 1 5ch;
 }
 .task-dueDate {
   flex: 0 0 13ch;
@@ -173,6 +174,13 @@ body {
 }
 .task-input[type="text"] {
   text-overflow: ellipsis;
+}
+.task-input.task-title:focus {
+  position: absolute;
+  width: 90%;
+  background-color: #fff;
+  box-shadow: 0 0 10px 0 lightblue;
+  padding: 0.5rem;
 }
 input[type="checkbox"] {
   accent-color: var(--dark-blue);
