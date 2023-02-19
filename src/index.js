@@ -102,7 +102,7 @@ const GUI = (function () {
       createNewTask();
     } else if (event.target.dataset.type === "delete-task") {
       console.log("GUI deleting task");
-      if (confirm("Please confirm deleting task")) {
+      if (event.ctrlKey || confirm("Please confirm deleting task")) {
         topProject.removeTask(event.target.dataset.taskId);
         refresh();
       }
@@ -138,7 +138,10 @@ const GUI = (function () {
     const projectId = event.target.dataset.projectId;
     const targetProject = state.getProjectById(projectId);
     if (clickSource === "del-project") {
-      if (confirm(`Please confirm removing "${targetProject.title}" project`)) {
+      if (
+        event.ctrlKey ||
+        confirm(`Please confirm removing "${targetProject.title}" project`)
+      ) {
         state.removeProject(projectId);
       }
     } else if (clickSource === "task-complete") {
