@@ -107,10 +107,7 @@ const GUI = (function () {
         refresh();
       }
     } else if (event.target.dataset.type === "description") {
-      const taskId = event.target.dataset.taskId;
-      const task = state.getTaskById(taskId);
-      document.body.appendChild(DescriptionModal(task));
-      document.querySelector(".description-modal-textarea").focus();
+      openModal(event);
     }
   }
   function createNewTask() {
@@ -124,6 +121,12 @@ const GUI = (function () {
     document
       .querySelector(".task-container .task-item:last-child input.task-title")
       .select();
+  }
+  function openModal(event) {
+    const taskId = event.target.dataset.taskId;
+    const task = state.getTaskById(taskId);
+    document.body.appendChild(DescriptionModal(task));
+    document.querySelector(".description-modal-textarea").focus();
   }
 
   newProjectButton.addEventListener("click", createNewProject);
@@ -198,6 +201,10 @@ const GUI = (function () {
   function handleKeyUp(event) {
     event.stopPropagation();
     if (event.keyCode === 13) {
+      if (event.target.dataset.type === "description") {
+        openModal(event);
+        return;
+      }
       //make input lose focus and so trigger 'change' events
       event.target.blur();
       if (event.ctrlKey && topProject) {
@@ -213,12 +220,16 @@ const GUI = (function () {
       event.ctrlKey &&
       event.target.id === "description-textarea"
     ) {
-      console.log("ctrl+enter!");
+      saveDescription(event);
+    } else if (
+      event.target.dataset.type === "modal-save" &&
+      (event.keyCode === 13 || event.keyCode === 32)
+    ) {
       saveDescription(event);
     } else if (
       event.keyCode === 27 &&
       (event.target.id === "description-textarea" ||
-        event.target.id === "modal-save")
+        event.target.dataset.type === "modal-save")
     ) {
       closeModal();
     }
