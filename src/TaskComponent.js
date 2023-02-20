@@ -1,63 +1,4 @@
-import { nanoid } from "nanoid";
-import { compareAsc, format } from "date-fns";
-
-export default function Task(
-  projectId,
-  title = "El tasco",
-  description = "",
-  dueDate = new Date(),
-  priority = "",
-  isCompleted = false
-) {
-  const _id = nanoid();
-  let _projectId = projectId;
-  let _title = title;
-  let _description = description;
-  let _dueDate = dueDate;
-  let _priority = priority;
-  let _isCompleted = isCompleted;
-
-  return {
-    get id() {
-      return _id;
-    },
-    get projectId() {
-      return _projectId;
-    },
-    get title() {
-      return _title;
-    },
-    set title(newTitle) {
-      _title = newTitle;
-    },
-    get description() {
-      return _description;
-    },
-    set description(newDescription) {
-      _description = newDescription;
-    },
-    get dueDate() {
-      return _dueDate;
-    },
-    set dueDate(newDueDate) {
-      _dueDate = newDueDate;
-    },
-    get priority() {
-      return _priority;
-    },
-    set priority(newPriority) {
-      _priority = newPriority;
-    },
-    get isCompleted() {
-      return _isCompleted;
-    },
-    set isCompleted(newIsCompleted) {
-      _isCompleted = newIsCompleted;
-    },
-  };
-}
-
-/* export function TaskComponent(task) {
+export function TaskComponent(task) {
   const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
 
@@ -122,9 +63,9 @@ function TaskInput(task, fieldType) {
     element.dataset.type = fieldType;
     return element;
   }
-} */
+}
 
-/* function TaskDeleteButton(task) {
+export function TaskDeleteButton(task) {
   const button = document.createElement("button");
   button.type = "button";
   button.classList.add("task-delete");
@@ -163,4 +104,4 @@ export function DescriptionModal(task) {
   modalContainer.appendChild(modal);
 
   return modalContainer;
-} */
+}

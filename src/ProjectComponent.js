@@ -1,48 +1,4 @@
-import { nanoid } from "nanoid";
-import Task from "./Task";
-
-export default function Project(
-  title = "New Project",
-  id = nanoid(),
-  tasks = []
-) {
-  let _title = title;
-  const _id = id;
-  let _tasks = tasks;
-
-  function addTask(newTask) {
-    _tasks.push(newTask);
-  }
-  function newTask(title) {
-    _tasks.push(Task(_id, title));
-  }
-  function removeTask(id) {
-    _tasks = _tasks.filter((item) => item.id !== id);
-  }
-
-  return {
-    get id() {
-      return _id;
-    },
-    get title() {
-      return _title;
-    },
-    set title(newTitle) {
-      _title = newTitle;
-    },
-    get tasks() {
-      return _tasks;
-    },
-    set tasks(newTasks) {
-      _tasks = newTasks;
-    },
-    addTask,
-    removeTask,
-    newTask,
-  };
-}
-
-/* export function ProjectComponent(project) {
+export function ProjectComponent(project) {
   const projectCard = document.createElement("div");
   projectCard.classList.add("card");
   projectCard.dataset.id = project.id;
@@ -77,4 +33,3 @@ export default function Project(
   elements.forEach((element) => (element.dataset.projectId = project.id));
   return projectCard;
 }
- */

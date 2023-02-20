@@ -1,7 +1,9 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
-import Task, { TaskComponent, DescriptionModal } from "./Task";
-import Project, { ProjectComponent } from "./Project";
+import Task from "./Task";
+import { TaskComponent, DescriptionModal } from "./TaskComponent";
+import Project from "./Project";
+import { ProjectComponent } from "./ProjectComponent";
 
 const state = (function () {
   let _projects = [];
