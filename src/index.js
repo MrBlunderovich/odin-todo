@@ -215,16 +215,21 @@ const GUI = (function () {
     ) {
       console.log("ctrl+enter!");
       saveDescription(event);
+    } else if (
+      event.keyCode === 27 &&
+      (event.target.id === "description-textarea" ||
+        event.target.id === "modal-save")
+    ) {
+      closeModal();
     }
   }
 
   document.addEventListener("mousedown", handleDocumentClick);
   function handleDocumentClick(event) {
-    if (
-      event.target.dataset.type === "modal-container" ||
-      event.target.dataset.type === "modal-save"
-    ) {
+    if (event.target.dataset.type === "modal-save") {
       saveDescription(event);
+    } else if (event.target.dataset.type === "modal-container") {
+      closeModal();
     }
   }
   function saveDescription(event) {
