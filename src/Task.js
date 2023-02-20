@@ -110,7 +110,7 @@ function TaskInput(task, fieldType) {
       element.value = task[fieldType].replaceAll("\n", " ");
       element.placeholder = "...";
     } else if (fieldType === "dueDate") {
-      // do stuff
+      // do stuff//////////////////////////////////////////
     } else {
       element.value = task[fieldType];
     }

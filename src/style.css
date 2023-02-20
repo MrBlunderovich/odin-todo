@@ -9,7 +9,6 @@
 }
 :root {
   --yellow: #f2c200;
-  --light-blue: #f3f9ff;
   --dark-blue: #274d7d;
   font-family: "Roboto", sans-serif;
 }
@@ -231,6 +230,7 @@ select.task-input:has(option[value="low"]:checked) {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 2;
 }
 .description-modal-textarea {
   width: 500px;
