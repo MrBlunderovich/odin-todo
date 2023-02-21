@@ -141,6 +141,7 @@ body {
 .task-dueDate {
   flex: 0 0 13ch;
   cursor: text;
+  position: relative;
 }
 .task-priority {
   flex: 0 0 5ch;
@@ -152,6 +153,16 @@ body {
   border: 1px solid var(--dark-blue);
   cursor: pointer;
   padding: 0.1rem 0.2rem;
+}
+.task-dueDate::before {
+  position: absolute;
+  width: 100%;
+  content: "No deadline";
+  background-color: #fff;
+}
+.task-dueDate:hover::before,
+.task-dueDate:focus::before {
+  display: none;
 }
 .project-expanded-title,
 .project-expanded-title:focus {

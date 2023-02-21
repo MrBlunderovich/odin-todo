@@ -5,7 +5,7 @@ export default function Task(
   projectId,
   title = "El tasco",
   description = "",
-  dueDate = new Date(),
+  dueDate = "",
   priority = "",
   isCompleted = false
 ) {
