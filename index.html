@@ -15,8 +15,8 @@
     <div class="page-container">
       <nav class="sidebar">
         <button class="card new-project">+ Add project</button>
-        <button class="card pseudo-project">Show overdue tasks</button>
-        <button class="card pseudo-project">Show today tasks</button>
+        <button class="card pseudo-project overdue">Show overdue tasks</button>
+        <button class="card pseudo-project today">Show today tasks</button>
         <div id="project-container" class="project-container"></div>
       </nav>
       <main class="main">
@@ -28,8 +28,10 @@
             autocomplete="off"
           />
           <ul class="task-container"></ul>
-          <button class="new-task-btn" data-type="add-task">+ Add task</button>
+          <div class="add-container"></div>
+          <!-- <button class="new-task-btn" data-type="add-task">+ Add task</button> -->
           <ul class="completed-task-container"></ul>
+          <!-- <div style="white-space: pre-line" id="testDiv"></div> -->
         </div>
       </main>
     </div>
