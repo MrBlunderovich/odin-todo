@@ -1,3 +1,6 @@
+import { intlFormatDistance, isValid } from "date-fns";
+import { capitalize } from "./index";
+
 export function TaskComponent(task) {
   const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
@@ -51,7 +54,16 @@ function TaskInput(task, fieldType) {
       element.value = task[fieldType].replaceAll("\n", " ");
       element.placeholder = "...";
     } else if (fieldType === "dueDate") {
-      // do stuff//////////////////////////////////////////
+      if (task.dueDate && isValid(task.dueDate)) {
+        /////////////////////////////////////////////////////////////////////
+        element.valueAsDate = task.dueDate;
+        const interval = intlFormatDistance(task.dueDate, new Date(), {
+          unit: "day",
+        });
+        element.dataset.interval = capitalize(interval);
+      } else {
+        element.dataset.interval = "Unset";
+      }
     } else {
       element.value = task[fieldType];
     }

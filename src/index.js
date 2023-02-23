@@ -4,21 +4,23 @@ import Task from "./Task";
 import { TaskComponent, DescriptionModal } from "./TaskComponent";
 import Project from "./Project";
 import { ProjectComponent } from "./ProjectComponent";
+import { isPast, isToday, endOfDay } from "date-fns";
 
 const state = (function () {
   let _projects = [];
 
-  function createProject(title) {
+  function createProject(title, tasks = [], isPseudo = false) {
     console.log("state.addProject invoked");
-    const newProject = Project(title);
+    const newProject = Project(title, undefined, tasks, isPseudo);
     _projects.unshift(newProject);
     GUI.refresh();
-    GUI.createNewTask();
+    if (!newProject.isPseudo) {
+      GUI.createNewTask();
+    }
   }
   function removeProject(id) {
     console.log("state.removeProject invoked");
     _projects = _projects.filter((project) => project.id !== id);
-    GUI.refresh();
   }
   function getProjects() {
     return _projects;
@@ -39,7 +41,7 @@ const state = (function () {
           task.projectId,
           task.title,
           task.description,
-          task.dueDate,
+          new Date(task.dueDate),
           task.priority,
           task.isCompleted
         );
@@ -71,6 +73,9 @@ const state = (function () {
     console.log("uploading projects to localStorage");
     localStorage.setItem("projects", JSON.stringify(_projects));
   }
+  function clearPseudoProjects() {
+    _projects = _projects.filter((project) => !project.isPseudo);
+  }
 
   return {
     createProject,
@@ -81,6 +86,7 @@ const state = (function () {
     syncStorage,
     getTaskById,
     getProjectById,
+    clearPseudoProjects,
   };
 })();
 
@@ -90,12 +96,15 @@ state.loadProjects();
 const GUI = (function () {
   const projectsContainer = document.querySelector(".project-container");
   const newProjectButton = document.querySelector(".new-project");
+  const overdueProjectButton = document.querySelector(".overdue");
+  const todayProjectButton = document.querySelector(".today");
   const expandedProjectDiv = document.querySelector(".project-expanded");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
   const completedTaskContainer = document.querySelector(
     ".completed-task-container"
   );
+  const addButtonContainer = document.querySelector(".add-container");
   let topProject = undefined;
 
   expandedProjectDiv.addEventListener("click", handleProjectClicks);
@@ -112,6 +121,7 @@ const GUI = (function () {
       openModal(event);
     }
   }
+  //TODO move following function to state?
   function createNewTask() {
     console.log("GUI.createNewTask invoked");
     if (!topProject) {
@@ -136,6 +146,35 @@ const GUI = (function () {
     console.log("GUI.createNewProject invoked");
     state.createProject("New project");
   }
+  overdueProjectButton.addEventListener("click", overduePseudoProject);
+  function overduePseudoProject() {
+    console.log("GUI.overduePseudoProject invoked");
+    state.clearPseudoProjects();
+    const overdueTasks = [];
+    state.getProjects().forEach((project) => {
+      project.tasks.forEach((task) => {
+        if (isPast(endOfDay(task.dueDate))) {
+          overdueTasks.push(task);
+        }
+      });
+    });
+    state.createProject("Overdue tasks", overdueTasks, true);
+    //////////////////////////////////////////////////////////////////
+  }
+  todayProjectButton.addEventListener("click", todayPseudoProject);
+  function todayPseudoProject() {
+    console.log("GUI.todayPseudoProject invoked");
+    state.clearPseudoProjects();
+    const todayTasks = [];
+    state.getProjects().forEach((project) => {
+      project.tasks.forEach((task) => {
+        if (isToday(task.dueDate)) {
+          todayTasks.push(task);
+        }
+      });
+    });
+    state.createProject("Tasks for today", todayTasks, true);
+  }
 
   projectsContainer.addEventListener("click", handleSidebarClicks);
   function handleSidebarClicks(event) {
@@ -148,6 +187,7 @@ const GUI = (function () {
         confirm(`Please confirm removing "${targetProject.title}" project`)
       ) {
         state.removeProject(projectId);
+        refresh();
       }
     } else if (clickSource === "task-complete") {
       const taskId = event.target.dataset.id;
@@ -159,6 +199,7 @@ const GUI = (function () {
     } else if (event.target.id !== "project-container") {
       console.log("GUI.selectProject invoked");
       state.selectProject(projectId);
+      state.clearPseudoProjects();
       refresh();
     }
   }
@@ -188,15 +229,14 @@ const GUI = (function () {
     } else {
       if (fieldType === "title") {
         targetTask[fieldType] = capitalize(event.target.value);
+      } else if (fieldType === "dueDate") {
+        targetTask[fieldType] = event.target.valueAsDate;
+        refresh();
       } else {
         targetTask[fieldType] = event.target.value;
       }
       refresh("exceptTasks");
     }
-  }
-
-  function capitalize(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   expandedProjectDiv.addEventListener("keyup", handleKeyUp);
@@ -272,22 +312,51 @@ const GUI = (function () {
         projectTitle.value = "Let's start a new project!";
       } else {
         projectTitle.value = topProject.title;
+        if (topProject.isPseudo) {
+          projectTitle.readOnly = true;
+        } else {
+          projectTitle.readOnly = false;
+        }
         for (let task of topProject.tasks) {
           const taskElement = TaskComponent(task);
           if (task.isCompleted) {
-            completedTaskContainer.appendChild(taskElement);
+            if (!topProject.isPseudo) {
+              completedTaskContainer.appendChild(taskElement);
+            }
           } else {
             taskContainer.appendChild(taskElement);
           }
         }
       }
     }
+    addButtonContainer.innerHTML = "";
+    if (!topProject.isPseudo) {
+      const addTaskButton = document.createElement("button");
+      addTaskButton.classList.add("new-task-btn");
+      addTaskButton.dataset.type = "add-task";
+      addTaskButton.textContent = "+ Add task";
+      addButtonContainer.appendChild(addTaskButton);
+    }
+
     projectsContainer.innerHTML = "";
     for (let project of currentProjects) {
-      const projectCard = ProjectComponent(project);
-      projectsContainer.appendChild(projectCard);
+      if (!project.isPseudo) {
+        const projectCard = ProjectComponent(project);
+        projectsContainer.appendChild(projectCard);
+      }
     }
-    state.syncStorage();
+    if (!topProject.isPseudo) {
+      //if (true) {
+      state.syncStorage();
+    }
+
+    /* document.getElementById("testDiv").textContent = JSON.stringify(
+      state.getProjects()[0].tasks.map((task) => {
+        return { dueDate: task.dueDate, type: typeof task.dueDate };
+      })
+    )
+      .split(",")
+      .join("\r\n"); */
   }
 
   return {
@@ -296,5 +365,9 @@ const GUI = (function () {
     //
   };
 })();
+
+export function capitalize(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 GUI.refresh();

@@ -4,11 +4,13 @@ import Task from "./Task";
 export default function Project(
   title = "New Project",
   id = nanoid(),
-  tasks = []
+  tasks = [],
+  isPseudo = false
 ) {
   let _title = title;
   const _id = id;
   let _tasks = tasks;
+  let _isPseudo = isPseudo;
 
   function addTask(newTask) {
     _tasks.push(newTask);
@@ -35,6 +37,9 @@ export default function Project(
     },
     set tasks(newTasks) {
       _tasks = newTasks;
+    },
+    get isPseudo() {
+      return _isPseudo;
     },
     addTask,
     removeTask,

@@ -170,7 +170,7 @@ body {
 .task-dueDate::before {
   position: absolute;
   width: 100%;
-  content: "No deadline set";
+  content: attr(data-interval);
   background-color: #fff;
 }
 .task-dueDate:hover::before,
@@ -219,6 +219,7 @@ select.task-input:has(option[value="low"]:checked) {
   background-color: #b9efff;
 }
 .new-task-btn {
+  width: 100%;
   padding: 0.5rem 2rem;
   border: none;
   border-top: 1px solid var(--dark-blue);
