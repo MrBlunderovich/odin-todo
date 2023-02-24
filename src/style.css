@@ -41,9 +41,10 @@ body {
   display: grid;
   grid-template-columns: minmax(220px, 300px) 1fr;
   grid-template-rows: 1fr;
-  gap: 2rem;
+  gap: 1rem;
   min-height: 100vh;
   padding-top: 6rem;
+  overflow-x: hidden;
 }
 .sidebar {
   /* width: 220px; */
@@ -145,25 +146,32 @@ body {
   position: relative;
   padding: 0 1rem;
   margin-bottom: 0.3rem;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 2fr 1fr auto auto auto;
   gap: 0.5rem;
 }
+.task-isCompleted {
+  grid-column: 1;
+}
 .task-title {
-  flex: 2 1 auto;
+  grid-column: 2;
 }
 .task-description {
-  flex: 1 1 5ch;
+  grid-column: 3;
+  width: 13ch;
 }
 .task-dueDate {
-  flex: 0 0 13ch;
+  grid-column: 4;
+  width: min-content;
   cursor: text;
   position: relative;
 }
 .task-priority {
-  flex: 0 0 5ch;
+  grid-column: 5;
   cursor: pointer;
 }
 .task-delete {
+  grid-column: 6;
   border-radius: 0;
   background-color: transparent;
   border: 1px solid var(--dark-blue);
@@ -196,7 +204,6 @@ body {
 .task-input:not([type="checkbox"]),
 .task-input:not([type="checkbox"]):focus {
   background-color: transparent;
-  width: 10ch;
   border: none;
   outline: none;
 }
