@@ -1,7 +1,7 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
 import Task from "./Task";
-import { TaskComponent, DescriptionModal } from "./TaskComponent";
+import { TaskComponent, DescriptionModal, TaskExpanded } from "./TaskComponent";
 import Project from "./Project";
 import { ProjectComponent } from "./ProjectComponent";
 import { isPast, isToday, endOfDay } from "date-fns";
@@ -276,9 +276,21 @@ const GUI = (function () {
       closeModal();
     }
   }
-
+  ///////////////////////////////////////////////+++++++++++++++++++++++++
   document.addEventListener("mousedown", handleDocumentClick);
   function handleDocumentClick(event) {
+    if (event.target.dataset.expander) {
+      console.log(event);
+      console.log(event.target.closest(".task-container"));
+      const taskItem = event.target.closest(".task-item");
+      console.log(taskItem.querySelector(".task-expanded"));
+      const taskExpanded = taskItem.querySelector(".task-expanded");
+      taskExpanded.textContent = "Expanded!";
+      const taskId = event.target.dataset.taskId;
+      console.log(taskId);
+      const task = state.getTaskById(taskId);
+      taskExpanded.appendChild(TaskExpanded(task));
+    }
     if (event.target.dataset.type === "modal-save") {
       saveDescription(event);
     } else if (event.target.dataset.type === "modal-container") {

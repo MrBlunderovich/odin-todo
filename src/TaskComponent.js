@@ -4,17 +4,99 @@ import { capitalize } from "./index";
 export function TaskComponent(task) {
   const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
+  taskElement.dataset.expander = true;
 
-  taskElement.appendChild(TaskInput(task, "isCompleted"));
-  taskElement.appendChild(TaskInput(task, "title"));
-  taskElement.appendChild(TaskInput(task, "description"));
-  taskElement.appendChild(TaskInput(task, "dueDate"));
-  taskElement.appendChild(TaskInput(task, "priority"));
-  taskElement.appendChild(TaskDeleteButton(task));
+  taskElement.appendChild(MakeCheckbox(task));
+  taskElement.appendChild(MakeTitle(task));
+  taskElement.appendChild(MakeNote(task));
+  taskElement.appendChild(MakeDate(task));
+  taskElement.appendChild(MakeDelete(task));
+  taskElement.appendChild(MakeContainer(task));
 
   return taskElement;
 }
 
+function MakeCheckbox(task) {
+  const checkbox = document.createElement("span");
+  checkbox.classList.add(`task-isCompleted`, "material-icons-outlined");
+  checkbox.textContent = task.isCompleted
+    ? "check_box"
+    : "check_box_outline_blank";
+  checkbox.checked = task.isCompleted;
+  checkbox.dataset.projectId = task.projectId;
+  checkbox.dataset.taskId = task.id;
+  checkbox.dataset.type = "checkbox";
+  return checkbox;
+}
+
+function MakeTitle(task) {
+  const title = document.createElement("span");
+  title.classList.add(`task-title`);
+  title.textContent = task.title;
+  title.dataset.projectId = task.projectId;
+  title.dataset.taskId = task.id;
+  title.dataset.type = "title";
+  title.dataset.expander = true;
+  return title;
+}
+
+function MakeNote(task) {
+  const note = document.createElement("span");
+  note.classList.add(`task-note`, "material-icons-outlined");
+  note.textContent = task.description ? "description" : "note_add"; //'description' for filled note
+  note.dataset.projectId = task.projectId;
+  note.dataset.taskId = task.id;
+  note.dataset.type = "note";
+  note.dataset.expander = true;
+  return note;
+}
+
+function MakeDate(task) {
+  const date = document.createElement("span");
+  date.classList.add(`task-date`);
+  date.dataset.projectId = task.projectId;
+  date.dataset.taskId = task.id;
+  date.dataset.type = "date";
+  date.dataset.expander = true;
+  if (task.dueDate && isValid(task.dueDate)) {
+    const interval = intlFormatDistance(task.dueDate, new Date(), {
+      unit: "day",
+    });
+    date.textContent = capitalize(interval);
+  } else {
+    date.textContent = "No date";
+  }
+  return date;
+}
+
+function MakeDelete(task) {
+  const button = document.createElement("span");
+  button.classList.add("task-delete", "material-icons-outlined");
+  button.textContent = "delete_forever";
+  button.dataset.taskId = task.id;
+  button.dataset.type = "delete";
+  return button;
+}
+
+function MakeContainer(task) {
+  const container = document.createElement("div");
+  container.classList.add("task-expanded");
+  container.dataset.projectId = task.projectId;
+  container.dataset.taskId = task.id;
+  container.dataset.type = "expanded";
+  return container;
+}
+
+//-------------------------------------
+
+export function TaskExpanded(task) {
+  console.log(task);
+  const fragment = document.createDocumentFragment();
+  fragment.textContent = "Fragmented!";
+  return fragment;
+}
+
+//////////////////////////////////////////////////////////////////////////
 function TaskInput(task, fieldType) {
   let inputType = "text";
   switch (fieldType) {
@@ -55,7 +137,6 @@ function TaskInput(task, fieldType) {
       element.placeholder = "...";
     } else if (fieldType === "dueDate") {
       if (task.dueDate && isValid(task.dueDate)) {
-        /////////////////////////////////////////////////////////////////////
         element.valueAsDate = task.dueDate;
         const interval = intlFormatDistance(task.dueDate, new Date(), {
           unit: "day",
@@ -75,16 +156,6 @@ function TaskInput(task, fieldType) {
     element.dataset.type = fieldType;
     return element;
   }
-}
-
-export function TaskDeleteButton(task) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.classList.add("task-delete");
-  button.textContent = "Del";
-  button.dataset.taskId = task.id;
-  button.dataset.type = "delete-task";
-  return button;
 }
 
 export function DescriptionModal(task) {
