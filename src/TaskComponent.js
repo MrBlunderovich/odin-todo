@@ -5,6 +5,8 @@ export function TaskComponent(task) {
   const taskElement = document.createElement("li");
   taskElement.classList.add("task-item");
   taskElement.dataset.expander = true;
+  taskElement.dataset.projectId = task.projectId;
+  taskElement.dataset.taskId = task.id;
 
   taskElement.appendChild(MakeCheckbox(task));
   taskElement.appendChild(MakeTitle(task));
@@ -90,10 +92,30 @@ function MakeContainer(task) {
 //-------------------------------------
 
 export function TaskExpanded(task) {
-  console.log(task);
   const fragment = document.createDocumentFragment();
-  fragment.textContent = "Fragmented!";
+
+  const inputBar = document.createElement("div");
+  inputBar.classList.add("task-input-container");
+  inputBar.dataset.projectId = task.projectId;
+  inputBar.dataset.taskId = task.id;
+  inputBar.appendChild(TaskInput(task, "title"));
+  inputBar.appendChild(TaskInput(task, "priority"));
+  inputBar.appendChild(TaskInput(task, "dueDate"));
+
+  fragment.appendChild(inputBar);
+  fragment.appendChild(TextArea(task));
+
   return fragment;
+}
+
+function TextArea(task) {
+  const textArea = document.createElement("textarea");
+  textArea.id = "description-textarea";
+  textArea.classList.add("description-textarea");
+  textArea.dataset.taskId = task.id;
+  textArea.dataset.projectId = task.projectId;
+  textArea.value = task.description;
+  return textArea;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,7 +137,7 @@ function TaskInput(task, fieldType) {
   }
   if (inputType === "select") {
     const element = document.createElement("select");
-    element.classList.add("task-input", `task-${fieldType}`);
+    element.classList.add(`${fieldType}-input`);
     element.dataset.projectId = task.projectId;
     element.dataset.taskId = task.id;
     element.dataset.type = fieldType;
@@ -130,7 +152,7 @@ function TaskInput(task, fieldType) {
   } else {
     const element = document.createElement("input");
     element.type = inputType;
-    element.classList.add("task-input", `task-${fieldType}`);
+    element.classList.add(`${fieldType}-input`);
     //element.value = task[fieldType];
     if (fieldType === "description") {
       element.value = task[fieldType].replaceAll("\n", " ");
@@ -138,12 +160,6 @@ function TaskInput(task, fieldType) {
     } else if (fieldType === "dueDate") {
       if (task.dueDate && isValid(task.dueDate)) {
         element.valueAsDate = task.dueDate;
-        const interval = intlFormatDistance(task.dueDate, new Date(), {
-          unit: "day",
-        });
-        element.dataset.interval = capitalize(interval);
-      } else {
-        element.dataset.interval = "Unset";
       }
     } else {
       element.value = task[fieldType];

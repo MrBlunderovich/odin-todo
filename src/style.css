@@ -180,6 +180,23 @@ body {
 .task-isCompleted:hover {
   transform: scale(1.2);
 }
+.task-input-container {
+  display: flex;
+  gap: 1rem;
+  margin: 0.5rem 0;
+}
+.task-input-container > *,
+.task-input-container > *:focus {
+  background-color: transparent;
+  border: 1px solid var(--dark-blue);
+  border-radius: 3px;
+  padding: 0.1rem 0.3rem;
+  outline: none;
+}
+.title-input {
+  flex: 1 0 auto;
+}
+
 .project-expanded-title,
 .project-expanded-title:focus {
   background-color: transparent;
@@ -192,12 +209,7 @@ body {
   outline: none;
   margin-bottom: 2rem;
 }
-/* .task-input:not([type="checkbox"]),
-.task-input:not([type="checkbox"]):focus {
-  background-color: transparent;
-  border: none;
-  outline: none;
-}
+/*
 .task-input[type="text"] {
   text-overflow: ellipsis;
 }
@@ -241,7 +253,7 @@ select.task-input:has(option[value="low"]:checked) {
 .completed-task-container > .task-item {
   opacity: 0.6;
 }
-.description-modal-container {
+/* .description-modal-container {
   position: absolute;
   top: 0;
   height: 100vh;
@@ -251,14 +263,15 @@ select.task-input:has(option[value="low"]:checked) {
   justify-content: center;
   align-items: center;
   z-index: 2;
-}
-.description-modal-textarea {
-  width: 500px;
+} */
+.description-textarea {
+  width: 100%;
   height: fit-content;
   min-height: 10rem;
   outline: none;
   resize: none;
-  border: none;
+  border: 1px solid var(--dark-blue);
+  border-radius: 5px;
   background-color: transparent;
   padding: 1rem;
 }

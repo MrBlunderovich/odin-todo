@@ -277,19 +277,11 @@ const GUI = (function () {
     }
   }
   ///////////////////////////////////////////////+++++++++++++++++++++++++
-  document.addEventListener("mousedown", handleDocumentClick);
+  document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (event.target.dataset.expander) {
-      console.log(event);
-      console.log(event.target.closest(".task-container"));
-      const taskItem = event.target.closest(".task-item");
-      console.log(taskItem.querySelector(".task-expanded"));
-      const taskExpanded = taskItem.querySelector(".task-expanded");
-      taskExpanded.textContent = "Expanded!";
-      const taskId = event.target.dataset.taskId;
-      console.log(taskId);
-      const task = state.getTaskById(taskId);
-      taskExpanded.appendChild(TaskExpanded(task));
+      closeExpanded();
+      expandTask(event);
     }
     if (event.target.dataset.type === "modal-save") {
       saveDescription(event);
@@ -306,10 +298,24 @@ const GUI = (function () {
     closeModal();
     refresh();
   }
+
   function closeModal() {
     document.body.removeChild(
       document.querySelector(".description-modal-container")
     );
+  }
+
+  function expandTask(event) {
+    const taskItem = event.target.closest(".task-item");
+    const taskExpanded = taskItem.querySelector(".task-expanded");
+    const taskId = event.target.dataset.taskId;
+    const task = state.getTaskById(taskId);
+    taskExpanded.appendChild(TaskExpanded(task));
+  }
+
+  function closeExpanded() {
+    const expandedDivs = document.querySelectorAll(".task-expanded");
+    expandedDivs.forEach((div) => (div.innerHTML = ""));
   }
 
   function refresh(exception) {
