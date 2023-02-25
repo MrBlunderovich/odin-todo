@@ -1,4 +1,4 @@
-import { intlFormatDistance, isValid } from "date-fns";
+import { intlFormatDistance, isValid, isPast, endOfDay } from "date-fns";
 import { capitalize } from "./index";
 
 export function TaskComponent(task) {
@@ -10,6 +10,7 @@ export function TaskComponent(task) {
 
   taskElement.appendChild(MakeCheckbox(task));
   taskElement.appendChild(MakeTitle(task));
+  taskElement.appendChild(MakePriority(task));
   taskElement.appendChild(MakeNote(task));
   taskElement.appendChild(MakeDate(task));
   taskElement.appendChild(MakeDelete(task));
@@ -27,7 +28,7 @@ function MakeCheckbox(task) {
   checkbox.checked = task.isCompleted;
   checkbox.dataset.projectId = task.projectId;
   checkbox.dataset.taskId = task.id;
-  checkbox.dataset.type = "checkbox";
+  checkbox.dataset.type = "complete-task";
   return checkbox;
 }
 
@@ -42,6 +43,17 @@ function MakeTitle(task) {
   return title;
 }
 
+function MakePriority(task) {
+  const priority = document.createElement("span");
+  priority.classList.add(`task-priority`, "material-icons-outlined");
+  priority.textContent = task.priority === "high" ? "priority_high" : "";
+  priority.dataset.projectId = task.projectId;
+  priority.dataset.taskId = task.id;
+  priority.dataset.type = "priority";
+  priority.dataset.expander = true;
+  return priority;
+}
+
 function MakeNote(task) {
   const note = document.createElement("span");
   note.classList.add(`task-note`, "material-icons-outlined");
@@ -52,7 +64,7 @@ function MakeNote(task) {
   note.dataset.expander = true;
   return note;
 }
-
+//--------------------------------------------DATE----DATE----DATE----DATE
 function MakeDate(task) {
   const date = document.createElement("span");
   date.classList.add(`task-date`);
@@ -65,6 +77,11 @@ function MakeDate(task) {
       unit: "day",
     });
     date.textContent = capitalize(interval);
+    if (!task.isCompleted && isPast(endOfDay(task.dueDate))) {
+      date.classList.add("overdue-task");
+    } else if (interval === "today") {
+      date.classList.add("today-task");
+    }
   } else {
     date.textContent = "No date";
   }
@@ -76,7 +93,7 @@ function MakeDelete(task) {
   button.classList.add("task-delete", "material-icons-outlined");
   button.textContent = "delete_forever";
   button.dataset.taskId = task.id;
-  button.dataset.type = "delete";
+  button.dataset.type = "delete-task";
   return button;
 }
 

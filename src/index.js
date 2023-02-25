@@ -111,12 +111,6 @@ const GUI = (function () {
   function handleProjectClicks(event) {
     if (event.target.dataset.type === "add-task") {
       createNewTask();
-    } else if (event.target.dataset.type === "delete-task") {
-      console.log("GUI deleting task");
-      if (event.ctrlKey || confirm("Please confirm deleting task")) {
-        topProject.removeTask(event.target.dataset.taskId);
-        refresh();
-      }
     } else if (event.target.dataset.type === "description") {
       openModal(event);
     }
@@ -190,12 +184,12 @@ const GUI = (function () {
         refresh();
       }
     } else if (clickSource === "task-complete") {
-      const taskId = event.target.dataset.id;
+      /* const taskId = event.target.dataset.id;
       console.log(taskId);
       const targetTask = state.getTaskById(taskId);
       console.log(targetTask);
       targetTask.isCompleted = true;
-      refresh();
+      refresh(); */
     } else if (event.target.id !== "project-container") {
       console.log("GUI.selectProject invoked");
       state.selectProject(projectId);
@@ -280,15 +274,41 @@ const GUI = (function () {
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (event.target.dataset.expander) {
-      closeExpanded();
+      closeExpandedTasks();
       expandTask(event);
     }
-    if (event.target.dataset.type === "modal-save") {
+    if (event.target.dataset.type === "delete-task") {
+      deleteTask(event);
+    }
+    if (event.target.dataset.type === "complete-task") {
+      completeTask(event);
+    }
+    if (true) {
+      //do stuff
+    }
+    /* if (event.target.dataset.type === "modal-save") {
       saveDescription(event);
     } else if (event.target.dataset.type === "modal-container") {
       closeModal();
+    } */
+  }
+
+  function deleteTask(event) {
+    console.log("GUI deleting task");
+    if (event.ctrlKey || confirm("Please confirm deleting task")) {
+      topProject.removeTask(event.target.dataset.taskId);
+      refresh();
     }
   }
+
+  function completeTask(event) {
+    console.log("GUI completing task");
+    const taskId = event.target.dataset.taskId;
+    const targetTask = state.getTaskById(taskId);
+    targetTask.isCompleted = !targetTask.isCompleted;
+    refresh();
+  }
+
   function saveDescription(event) {
     const taskId = event.target.dataset.taskId;
     const textAreaValue = document.querySelector(
@@ -299,11 +319,11 @@ const GUI = (function () {
     refresh();
   }
 
-  function closeModal() {
+  /* function closeModal() {
     document.body.removeChild(
       document.querySelector(".description-modal-container")
     );
-  }
+  } */
 
   function expandTask(event) {
     const taskItem = event.target.closest(".task-item");
@@ -313,7 +333,7 @@ const GUI = (function () {
     taskExpanded.appendChild(TaskExpanded(task));
   }
 
-  function closeExpanded() {
+  function closeExpandedTasks() {
     const expandedDivs = document.querySelectorAll(".task-expanded");
     expandedDivs.forEach((div) => (div.innerHTML = ""));
   }

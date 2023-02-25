@@ -13,11 +13,12 @@ export function ProjectComponent(project) {
       const taskLI = document.createElement("li");
       const taskTitle = document.createElement("span");
       taskTitle.textContent = task.title;
-      const taskCheckbox = document.createElement("input");
-      taskCheckbox.type = "checkbox";
-      taskCheckbox.dataset.id = task.id;
+      const taskCheckbox = document.createElement("span");
+      taskCheckbox.classList.add(`task-isCompleted`, "material-icons-outlined");
+      taskCheckbox.textContent = "check_box_outline_blank";
+      taskCheckbox.dataset.taskId = task.id;
       taskCheckbox.dataset.projectId = project.id;
-      taskCheckbox.dataset.type = "task-complete";
+      taskCheckbox.dataset.type = "complete-task";
       taskLI.appendChild(taskCheckbox);
       taskLI.appendChild(taskTitle);
       taskList.appendChild(taskLI);
