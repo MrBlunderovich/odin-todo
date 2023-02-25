@@ -92,6 +92,7 @@ function MakeDelete(task) {
   const button = document.createElement("span");
   button.classList.add("task-delete", "material-icons-outlined");
   button.textContent = "delete_forever";
+  button.dataset.projectId = task.projectId;
   button.dataset.taskId = task.id;
   button.dataset.type = "delete-task";
   return button;
@@ -122,6 +123,12 @@ export function TaskExpanded(task) {
   fragment.appendChild(inputBar);
   fragment.appendChild(TextArea(task));
 
+  fragment.querySelectorAll("input,select,textarea").forEach((element) => {
+    element.dataset.projectId = task.projectId;
+    element.dataset.taskId = task.id;
+    element.dataset.isTaskInput = true;
+  });
+
   return fragment;
 }
 
@@ -130,8 +137,6 @@ function TitleInput(task) {
   element.type = "text";
   element.classList.add(`title-input`);
   element.value = task.title;
-  element.dataset.projectId = task.projectId;
-  element.dataset.taskId = task.id;
   element.dataset.type = "title";
   return element;
 }
@@ -151,8 +156,6 @@ function PriorityInput(task) {
     element.appendChild(optionElement);
   }
   element.value = task.priority;
-  element.dataset.projectId = task.projectId;
-  element.dataset.taskId = task.id;
   element.dataset.type = "priority";
   return element;
 }
@@ -164,9 +167,7 @@ function DateInput(task) {
   if (task.dueDate && isValid(task.dueDate)) {
     element.valueAsDate = task.dueDate;
   }
-  element.dataset.projectId = task.projectId;
-  element.dataset.taskId = task.id;
-  element.dataset.type = "date";
+  element.dataset.type = "dueDate";
   return element;
 }
 
@@ -174,9 +175,8 @@ function TextArea(task) {
   const textArea = document.createElement("textarea");
   textArea.id = "description-textarea";
   textArea.classList.add("description-textarea");
-  textArea.dataset.taskId = task.id;
-  textArea.dataset.projectId = task.projectId;
   textArea.value = task.description;
+  textArea.dataset.type = "description";
   return textArea;
 }
 

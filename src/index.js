@@ -253,16 +253,15 @@ const GUI = (function () {
   ///////////////////////////////////////////////++++++++++++++++++++KEY
   document.addEventListener("keyup", handleDocumentKeyUp);
   function handleDocumentKeyUp(event) {
-    console.log(event);
     if (
       event.keyCode === 13 && //enter
       event.ctrlKey &&
-      event.target.id === "description-textarea"
+      event.target.dataset.isTaskInput
     ) {
       saveTaskData(event);
     } else if (
       event.keyCode === 27 && //escape
-      event.target.id === "description-textarea"
+      event.target.dataset.isTaskInput
     ) {
       closeExpandedTasks();
     }
@@ -272,8 +271,11 @@ const GUI = (function () {
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (event.target.dataset.expander) {
-      closeExpandedTasks();
-      expandTask(event);
+      //console.log(event.target.closest(".task-item:has(textarea)"));
+      if (!event.target.closest(".task-item:has(textarea)")) {
+        closeExpandedTasks();
+        expandTask(event);
+      }
     }
     if (event.target.dataset.type === "delete-task") {
       deleteTask(event);
@@ -303,11 +305,22 @@ const GUI = (function () {
   }
 
   function saveTaskData(event) {
-    console.log("GUI saving description");
+    console.log("GUI saving task data");
     const taskId = event.target.dataset.taskId;
-    const textAreaValue = event.target.value;
-    console.log(textAreaValue);
-    state.getTaskById(taskId).description = textAreaValue;
+    const targetTask = state.getTaskById(taskId);
+    const inputs = event.target
+      .closest(".task-expanded")
+      .querySelectorAll("input,select,textarea");
+    inputs.forEach((field) => {
+      const fieldType = field.dataset.type;
+      if (fieldType === "title") {
+        targetTask[fieldType] = capitalize(field.value);
+      } else if (fieldType === "dueDate") {
+        targetTask[fieldType] = field.valueAsDate;
+      } else {
+        targetTask[fieldType] = field.value;
+      }
+    });
     refresh();
   }
 
@@ -326,6 +339,7 @@ const GUI = (function () {
   }
 
   function refresh(exception) {
+    //does it still need exception?
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
