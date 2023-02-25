@@ -131,8 +131,8 @@ const GUI = (function () {
   function openModal(event) {
     const taskId = event.target.dataset.taskId;
     const task = state.getTaskById(taskId);
-    document.body.appendChild(DescriptionModal(task));
-    document.querySelector(".description-modal-textarea").focus();
+    //document.body.appendChild(DescriptionModal(task));
+    //document.querySelector(".description-modal-textarea").focus();
   }
 
   newProjectButton.addEventListener("click", createNewProject);
@@ -253,12 +253,13 @@ const GUI = (function () {
   ///////////////////////////////////////////////++++++++++++++++++++KEY
   document.addEventListener("keyup", handleDocumentKeyUp);
   function handleDocumentKeyUp(event) {
+    console.log(event);
     if (
       event.keyCode === 13 && //enter
       event.ctrlKey &&
       event.target.id === "description-textarea"
     ) {
-      saveDescription(event);
+      saveTaskData(event);
     } else if (
       event.keyCode === 27 && //escape
       event.target.id === "description-textarea"
@@ -266,6 +267,7 @@ const GUI = (function () {
       closeExpandedTasks();
     }
   }
+
   ///////////////////////////////////////////////++++++++++++++++++++CLICK
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
@@ -300,7 +302,7 @@ const GUI = (function () {
     refresh();
   }
 
-  function saveDescription(event) {
+  function saveTaskData(event) {
     console.log("GUI saving description");
     const taskId = event.target.dataset.taskId;
     const textAreaValue = event.target.value;
@@ -309,18 +311,13 @@ const GUI = (function () {
     refresh();
   }
 
-  /* function closeModal() {
-    document.body.removeChild(
-      document.querySelector(".description-modal-container")
-    );
-  } */
-
   function expandTask(event) {
     const taskItem = event.target.closest(".task-item");
     const taskExpanded = taskItem.querySelector(".task-expanded");
     const taskId = event.target.dataset.taskId;
     const task = state.getTaskById(taskId);
     taskExpanded.appendChild(TaskExpanded(task));
+    taskExpanded.querySelector(".title-input").focus();
   }
 
   function closeExpandedTasks() {

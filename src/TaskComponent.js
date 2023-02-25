@@ -115,14 +115,59 @@ export function TaskExpanded(task) {
   inputBar.classList.add("task-input-container");
   inputBar.dataset.projectId = task.projectId;
   inputBar.dataset.taskId = task.id;
-  inputBar.appendChild(TaskInput(task, "title"));
-  inputBar.appendChild(TaskInput(task, "priority"));
-  inputBar.appendChild(TaskInput(task, "dueDate"));
+  inputBar.appendChild(TitleInput(task));
+  inputBar.appendChild(PriorityInput(task));
+  inputBar.appendChild(DateInput(task));
 
   fragment.appendChild(inputBar);
   fragment.appendChild(TextArea(task));
 
   return fragment;
+}
+
+function TitleInput(task) {
+  const element = document.createElement("input");
+  element.type = "text";
+  element.classList.add(`title-input`);
+  element.value = task.title;
+  element.dataset.projectId = task.projectId;
+  element.dataset.taskId = task.id;
+  element.dataset.type = "title";
+  return element;
+}
+
+function PriorityInput(task) {
+  const element = document.createElement("select");
+  element.classList.add(`priority-input`);
+  element.dataset.projectId = task.projectId;
+  element.dataset.taskId = task.id;
+  for (let option of ["normal", "high"]) {
+    const optionElement = document.createElement("option");
+    optionElement.innerText = option;
+    optionElement.value = option;
+    if (option === "normal") {
+      optionElement.selected = true;
+    }
+    element.appendChild(optionElement);
+  }
+  element.value = task.priority;
+  element.dataset.projectId = task.projectId;
+  element.dataset.taskId = task.id;
+  element.dataset.type = "priority";
+  return element;
+}
+
+function DateInput(task) {
+  const element = document.createElement("input");
+  element.type = "date";
+  element.classList.add(`date-input`);
+  if (task.dueDate && isValid(task.dueDate)) {
+    element.valueAsDate = task.dueDate;
+  }
+  element.dataset.projectId = task.projectId;
+  element.dataset.taskId = task.id;
+  element.dataset.type = "date";
+  return element;
 }
 
 function TextArea(task) {
@@ -136,14 +181,11 @@ function TextArea(task) {
 }
 
 //////////////////////////////////////////////////////////////////////////
-function TaskInput(task, fieldType) {
+/* function TaskInput(task, fieldType) {
   let inputType = "text";
   switch (fieldType) {
     case "dueDate":
       inputType = "date";
-      break;
-    case "isCompleted":
-      inputType = "checkbox";
       break;
     case "priority":
       inputType = "select";
@@ -192,9 +234,9 @@ function TaskInput(task, fieldType) {
     element.dataset.type = fieldType;
     return element;
   }
-}
+} */
 
-export function DescriptionModal(task) {
+/* export function DescriptionModal(task) {
   const modalContainer = document.createElement("div");
   modalContainer.classList.add("description-modal-container");
   modalContainer.dataset.taskId = task.id;
@@ -224,3 +266,4 @@ export function DescriptionModal(task) {
 
   return modalContainer;
 }
+ */
