@@ -158,10 +158,13 @@ function TaskInput(task, fieldType) {
     element.dataset.projectId = task.projectId;
     element.dataset.taskId = task.id;
     element.dataset.type = fieldType;
-    for (let option of ["normal", "high", "low"]) {
+    for (let option of ["normal", "high"]) {
       const optionElement = document.createElement("option");
       optionElement.innerText = option;
       optionElement.value = option;
+      if (option === "normal") {
+        optionElement.selected = true;
+      }
       element.appendChild(optionElement);
     }
     element.value = task[fieldType];

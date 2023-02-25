@@ -214,6 +214,7 @@ const GUI = (function () {
   }
   function handleTaskInputChange(event) {
     console.log("handleTaskInputChange invoked");
+    return;
     const taskId = event.target.dataset.taskId;
     const fieldType = event.target.dataset.type;
     const targetTask = topProject.tasks.find((task) => task.id === taskId);
@@ -233,7 +234,8 @@ const GUI = (function () {
     }
   }
 
-  expandedProjectDiv.addEventListener("keyup", handleKeyUp);
+  //check this
+  /* expandedProjectDiv.addEventListener("keyup", handleKeyUp);
   function handleKeyUp(event) {
     event.stopPropagation();
     if (event.keyCode === 13) {
@@ -247,30 +249,24 @@ const GUI = (function () {
         createNewTask();
       }
     }
-  }
-
+  } */
+  ///////////////////////////////////////////////++++++++++++++++++++KEY
   document.addEventListener("keyup", handleDocumentKeyUp);
   function handleDocumentKeyUp(event) {
     if (
-      event.keyCode === 13 &&
+      event.keyCode === 13 && //enter
       event.ctrlKey &&
       event.target.id === "description-textarea"
     ) {
       saveDescription(event);
     } else if (
-      event.target.dataset.type === "modal-save" &&
-      (event.keyCode === 13 || event.keyCode === 32)
+      event.keyCode === 27 && //escape
+      event.target.id === "description-textarea"
     ) {
-      saveDescription(event);
-    } else if (
-      event.keyCode === 27 &&
-      (event.target.id === "description-textarea" ||
-        event.target.dataset.type === "modal-save")
-    ) {
-      closeModal();
+      closeExpandedTasks();
     }
   }
-  ///////////////////////////////////////////////+++++++++++++++++++++++++
+  ///////////////////////////////////////////////++++++++++++++++++++CLICK
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (event.target.dataset.expander) {
@@ -286,11 +282,6 @@ const GUI = (function () {
     if (true) {
       //do stuff
     }
-    /* if (event.target.dataset.type === "modal-save") {
-      saveDescription(event);
-    } else if (event.target.dataset.type === "modal-container") {
-      closeModal();
-    } */
   }
 
   function deleteTask(event) {
@@ -310,12 +301,11 @@ const GUI = (function () {
   }
 
   function saveDescription(event) {
+    console.log("GUI saving description");
     const taskId = event.target.dataset.taskId;
-    const textAreaValue = document.querySelector(
-      ".description-modal-textarea"
-    ).value;
+    const textAreaValue = event.target.value;
+    console.log(textAreaValue);
     state.getTaskById(taskId).description = textAreaValue;
-    closeModal();
     refresh();
   }
 

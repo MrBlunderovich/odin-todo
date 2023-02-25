@@ -185,10 +185,21 @@ body {
 .task-expanded {
   grid-row: 2;
   grid-column: 1/-1;
+  position: relative;
+}
+.task-expanded:has(textarea)::after {
+  position: absolute;
+  right: 1rem;
+  bottom: 1.5rem;
+  content: "Ctrl+Enter saves, Esc discards.";
+  font-size: 80%;
 }
 .material-icons-outlined:hover {
   transform: scale(1.2);
   cursor: pointer;
+}
+.material-icons-outlined:active {
+  transform: none;
 }
 .overdue-task {
   background-color: #ffbbb3;
@@ -203,7 +214,7 @@ body {
 }
 .task-input-container > *,
 .task-input-container > *:focus {
-  background-color: transparent;
+  background-color: #ffefae;
   border: 1px solid var(--dark-blue);
   border-radius: 3px;
   padding: 0.1rem 0.3rem;
