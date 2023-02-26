@@ -16,7 +16,10 @@ export default function Project(
     _tasks.push(newTask);
   }
   function newTask(title) {
-    _tasks.push(Task(_id, title));
+    //_tasks.push(Task(_id, title));
+    const task = Task(_id, title);
+    _tasks.push(task);
+    return task;
   }
   function removeTask(id) {
     _tasks = _tasks.filter((item) => item.id !== id);

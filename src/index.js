@@ -107,34 +107,6 @@ const GUI = (function () {
   const addButtonContainer = document.querySelector(".add-container");
   let topProject = undefined;
 
-  expandedProjectDiv.addEventListener("click", handleProjectClicks);
-  function handleProjectClicks(event) {
-    if (event.target.dataset.type === "add-task") {
-      createNewTask();
-    } else if (event.target.dataset.type === "description") {
-      openModal(event);
-    }
-  }
-  //TODO move following function to state?
-  function createNewTask() {
-    console.log("GUI.createNewTask invoked");
-    if (!topProject) {
-      console.log("no projects yet");
-      createNewProject();
-    }
-    topProject.newTask();
-    refresh();
-    document
-      .querySelector(".task-container .task-item:last-child input.task-title")
-      .select();
-  }
-  function openModal(event) {
-    const taskId = event.target.dataset.taskId;
-    const task = state.getTaskById(taskId);
-    //document.body.appendChild(DescriptionModal(task));
-    //document.querySelector(".description-modal-textarea").focus();
-  }
-
   newProjectButton.addEventListener("click", createNewProject);
   function createNewProject() {
     console.log("GUI.createNewProject invoked");
@@ -153,7 +125,6 @@ const GUI = (function () {
       });
     });
     state.createProject("Overdue tasks", overdueTasks, true);
-    //////////////////////////////////////////////////////////////////
   }
   todayProjectButton.addEventListener("click", todayPseudoProject);
   function todayPseudoProject() {
@@ -176,13 +147,13 @@ const GUI = (function () {
     const projectId = event.target.dataset.projectId;
     const targetProject = state.getProjectById(projectId);
     if (clickSource === "del-project") {
-      if (
+      /* if (
         event.ctrlKey ||
         confirm(`Please confirm removing "${targetProject.title}" project`)
       ) {
         state.removeProject(projectId);
         refresh();
-      }
+      } */
     } else if (clickSource === "task-complete") {
       /* const taskId = event.target.dataset.id;
       console.log(taskId);
@@ -190,11 +161,14 @@ const GUI = (function () {
       console.log(targetTask);
       targetTask.isCompleted = true;
       refresh(); */
-    } else if (event.target.id !== "project-container") {
-      console.log("GUI.selectProject invoked");
+    } else if (
+      event.target.id !== "project-container" &&
+      clickSource !== "complete-task"
+    ) {
+      /* console.log("GUI.selectProject invoked");
       state.selectProject(projectId);
       state.clearPseudoProjects();
-      refresh();
+      refresh(); */
     }
   }
 
@@ -271,11 +245,7 @@ const GUI = (function () {
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     if (event.target.dataset.expander) {
-      //console.log(event.target.closest(".task-item:has(textarea)"));
-      if (!event.target.closest(".task-item:has(textarea)")) {
-        closeExpandedTasks();
-        expandTask(event);
-      }
+      expandTask(event);
     }
     if (event.target.dataset.type === "delete-task") {
       deleteTask(event);
@@ -283,9 +253,60 @@ const GUI = (function () {
     if (event.target.dataset.type === "complete-task") {
       completeTask(event);
     }
+    if (event.target.dataset.type === "add-task") {
+      createNewTask();
+    }
+    if (event.target.dataset.type === "del-project") {
+      deleteProject(event);
+    }
+    if (event.target.dataset.type === "del-project") {
+      deleteProject(event);
+    }
+    if (
+      event.target.closest(".project-container") &&
+      event.target.id !== "project-container" &&
+      event.target.dataset.type !== "complete-task"
+    ) {
+      selectProject(event);
+    }
     if (true) {
       //do stuff
     }
+  }
+
+  function selectProject(event) {
+    console.log("GUI.selectProject invoked");
+    const projectId = event.target.dataset.projectId;
+    state.selectProject(projectId);
+    state.clearPseudoProjects();
+    refresh();
+  }
+
+  function deleteProject(event) {
+    const projectId = event.target.dataset.projectId;
+    const targetProject = state.getProjectById(projectId);
+    if (
+      event.ctrlKey ||
+      confirm(`Please confirm removing "${targetProject.title}" project`)
+    ) {
+      state.removeProject(projectId);
+      refresh();
+    }
+  }
+
+  function createNewTask() {
+    console.log("GUI.createNewTask invoked");
+    if (!topProject) {
+      console.log("no projects yet");
+      createNewProject();
+    }
+    //topProject.newTask();
+    const newTask = topProject.newTask();
+    const newTaskId = newTask.id;
+    refresh();
+    document
+      .querySelector(`.task-item[data-task-id='${newTaskId}']>.task-title`)
+      .click();
   }
 
   function deleteTask(event) {
@@ -325,12 +346,15 @@ const GUI = (function () {
   }
 
   function expandTask(event) {
-    const taskItem = event.target.closest(".task-item");
-    const taskExpanded = taskItem.querySelector(".task-expanded");
-    const taskId = event.target.dataset.taskId;
-    const task = state.getTaskById(taskId);
-    taskExpanded.appendChild(TaskExpanded(task));
-    taskExpanded.querySelector(".title-input").focus();
+    if (!event.target.closest(".task-item:has(textarea)")) {
+      closeExpandedTasks();
+      const taskItem = event.target.closest(".task-item");
+      const taskExpanded = taskItem.querySelector(".task-expanded");
+      const taskId = event.target.dataset.taskId;
+      const task = state.getTaskById(taskId);
+      taskExpanded.appendChild(TaskExpanded(task));
+      taskExpanded.querySelector(".title-input").focus();
+    }
   }
 
   function closeExpandedTasks() {
@@ -343,31 +367,31 @@ const GUI = (function () {
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
-    if (exception !== "exceptTasks") {
-      taskContainer.innerHTML = "";
-      completedTaskContainer.innerHTML = "";
-      if (!topProject) {
-        console.warn("GUI.refresh: no projects available");
-        projectTitle.value = "Let's start a new project!";
+    //if (exception !== "exceptTasks") {
+    taskContainer.innerHTML = "";
+    completedTaskContainer.innerHTML = "";
+    if (!topProject) {
+      console.warn("GUI.refresh: no projects available");
+      projectTitle.value = "Let's start a new project!";
+    } else {
+      projectTitle.value = topProject.title;
+      if (topProject.isPseudo) {
+        projectTitle.readOnly = true;
       } else {
-        projectTitle.value = topProject.title;
-        if (topProject.isPseudo) {
-          projectTitle.readOnly = true;
-        } else {
-          projectTitle.readOnly = false;
-        }
-        for (let task of topProject.tasks) {
-          const taskElement = TaskComponent(task);
-          if (task.isCompleted) {
-            if (!topProject.isPseudo) {
-              completedTaskContainer.appendChild(taskElement);
-            }
-          } else {
-            taskContainer.appendChild(taskElement);
+        projectTitle.readOnly = false;
+      }
+      for (let task of topProject.tasks) {
+        const taskElement = TaskComponent(task);
+        if (task.isCompleted) {
+          if (!topProject.isPseudo) {
+            completedTaskContainer.appendChild(taskElement);
           }
+        } else {
+          taskContainer.appendChild(taskElement);
         }
       }
     }
+    //}
     addButtonContainer.innerHTML = "";
     if (!topProject.isPseudo) {
       const addTaskButton = document.createElement("button");
