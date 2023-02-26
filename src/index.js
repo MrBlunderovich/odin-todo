@@ -95,10 +95,6 @@ state.loadProjects();
 //////////////////////////////////////////////////////////////////////
 const GUI = (function () {
   const projectsContainer = document.querySelector(".project-container");
-  const newProjectButton = document.querySelector(".new-project");
-  const overdueProjectButton = document.querySelector(".overdue");
-  const todayProjectButton = document.querySelector(".today");
-  const expandedProjectDiv = document.querySelector(".project-expanded");
   const projectTitle = document.querySelector(".project-expanded-title");
   const taskContainer = document.querySelector(".task-container");
   const completedTaskContainer = document.querySelector(
@@ -107,123 +103,15 @@ const GUI = (function () {
   const addButtonContainer = document.querySelector(".add-container");
   let topProject = undefined;
 
-  newProjectButton.addEventListener("click", createNewProject);
-  function createNewProject() {
-    console.log("GUI.createNewProject invoked");
-    state.createProject("New project");
-  }
-  overdueProjectButton.addEventListener("click", overduePseudoProject);
-  function overduePseudoProject() {
-    console.log("GUI.overduePseudoProject invoked");
-    state.clearPseudoProjects();
-    const overdueTasks = [];
-    state.getProjects().forEach((project) => {
-      project.tasks.forEach((task) => {
-        if (isPast(endOfDay(task.dueDate))) {
-          overdueTasks.push(task);
-        }
-      });
-    });
-    state.createProject("Overdue tasks", overdueTasks, true);
-  }
-  todayProjectButton.addEventListener("click", todayPseudoProject);
-  function todayPseudoProject() {
-    console.log("GUI.todayPseudoProject invoked");
-    state.clearPseudoProjects();
-    const todayTasks = [];
-    state.getProjects().forEach((project) => {
-      project.tasks.forEach((task) => {
-        if (isToday(task.dueDate)) {
-          todayTasks.push(task);
-        }
-      });
-    });
-    state.createProject("Tasks for today", todayTasks, true);
-  }
-
-  projectsContainer.addEventListener("click", handleSidebarClicks);
-  function handleSidebarClicks(event) {
-    const clickSource = event.target.dataset.type;
-    const projectId = event.target.dataset.projectId;
-    const targetProject = state.getProjectById(projectId);
-    if (clickSource === "del-project") {
-      /* if (
-        event.ctrlKey ||
-        confirm(`Please confirm removing "${targetProject.title}" project`)
-      ) {
-        state.removeProject(projectId);
-        refresh();
-      } */
-    } else if (clickSource === "task-complete") {
-      /* const taskId = event.target.dataset.id;
-      console.log(taskId);
-      const targetTask = state.getTaskById(taskId);
-      console.log(targetTask);
-      targetTask.isCompleted = true;
-      refresh(); */
-    } else if (
-      event.target.id !== "project-container" &&
-      clickSource !== "complete-task"
-    ) {
-      /* console.log("GUI.selectProject invoked");
-      state.selectProject(projectId);
-      state.clearPseudoProjects();
-      refresh(); */
-    }
-  }
-
-  expandedProjectDiv.addEventListener("change", handleProjectInputChange);
-  function handleProjectInputChange(event) {
+  //////////////////////////////////////////////+++++++++++++++++++CHANGE
+  document.addEventListener("change", handleDocumentChange);
+  function handleDocumentChange(event) {
     if (event.target.id === "project-expanded-title") {
-      console.log("changing project title");
-      if (topProject) {
-        topProject.title = capitalize(event.target.value);
-        refresh();
-      } else {
-        console.warn("no project to change title of");
-      }
-    } else {
-      handleTaskInputChange(event);
+      changeProjectTitle(event);
+    } else if (event.target.closest(".task-expanded")) {
+      saveTaskData(event);
     }
   }
-  function handleTaskInputChange(event) {
-    console.log("handleTaskInputChange invoked");
-    return;
-    const taskId = event.target.dataset.taskId;
-    const fieldType = event.target.dataset.type;
-    const targetTask = topProject.tasks.find((task) => task.id === taskId);
-    if (fieldType === "isCompleted") {
-      targetTask.isCompleted = event.target.checked;
-      refresh();
-    } else {
-      if (fieldType === "title") {
-        targetTask[fieldType] = capitalize(event.target.value);
-      } else if (fieldType === "dueDate") {
-        targetTask[fieldType] = event.target.valueAsDate;
-        refresh();
-      } else {
-        targetTask[fieldType] = event.target.value;
-      }
-      refresh("exceptTasks");
-    }
-  }
-
-  //check this
-  /* expandedProjectDiv.addEventListener("keyup", handleKeyUp);
-  function handleKeyUp(event) {
-    event.stopPropagation();
-    if (event.keyCode === 13) {
-      if (event.target.dataset.type === "description") {
-        openModal(event);
-        return;
-      }
-      //make input lose focus and so trigger 'change' events
-      event.target.blur();
-      if (event.ctrlKey && topProject) {
-        createNewTask();
-      }
-    }
-  } */
   ///////////////////////////////////////////////++++++++++++++++++++KEY
   document.addEventListener("keyup", handleDocumentKeyUp);
   function handleDocumentKeyUp(event) {
@@ -232,7 +120,8 @@ const GUI = (function () {
       event.ctrlKey &&
       event.target.dataset.isTaskInput
     ) {
-      saveTaskData(event);
+      //saveTaskData(event);
+      closeExpandedTasks();
     } else if (
       event.keyCode === 27 && //escape
       event.target.dataset.isTaskInput
@@ -244,6 +133,7 @@ const GUI = (function () {
   ///////////////////////////////////////////////++++++++++++++++++++CLICK
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
+    //avoid checking unnecessary conditions
     if (event.target.dataset.expander) {
       expandTask(event);
     }
@@ -259,9 +149,6 @@ const GUI = (function () {
     if (event.target.dataset.type === "del-project") {
       deleteProject(event);
     }
-    if (event.target.dataset.type === "del-project") {
-      deleteProject(event);
-    }
     if (
       event.target.closest(".project-container") &&
       event.target.id !== "project-container" &&
@@ -269,9 +156,59 @@ const GUI = (function () {
     ) {
       selectProject(event);
     }
-    if (true) {
-      //do stuff
+    if (event.target.dataset.type === "new-project") {
+      createNewProject();
     }
+    if (event.target.dataset.type === "overdue-project") {
+      overduePseudoProject();
+    }
+    if (event.target.dataset.type === "today-project") {
+      todayPseudoProject();
+    }
+  }
+  /////////////////////////////////****************************FUNCTIONS
+
+  function changeProjectTitle(event) {
+    console.log("changing project title");
+    if (topProject) {
+      topProject.title = capitalize(event.target.value);
+      refresh();
+    } else {
+      console.warn("no project to change title of");
+    }
+  }
+
+  function overduePseudoProject() {
+    console.log("GUI.overduePseudoProject invoked");
+    state.clearPseudoProjects();
+    const overdueTasks = [];
+    state.getProjects().forEach((project) => {
+      project.tasks.forEach((task) => {
+        if (isPast(endOfDay(task.dueDate))) {
+          overdueTasks.push(task);
+        }
+      });
+    });
+    state.createProject("Overdue tasks", overdueTasks, true);
+  }
+
+  function todayPseudoProject() {
+    console.log("GUI.todayPseudoProject invoked");
+    state.clearPseudoProjects();
+    const todayTasks = [];
+    state.getProjects().forEach((project) => {
+      project.tasks.forEach((task) => {
+        if (isToday(task.dueDate)) {
+          todayTasks.push(task);
+        }
+      });
+    });
+    state.createProject("Tasks for today", todayTasks, true);
+  }
+
+  function createNewProject() {
+    console.log("GUI.createNewProject invoked");
+    state.createProject("New project");
   }
 
   function selectProject(event) {
@@ -346,14 +283,31 @@ const GUI = (function () {
   }
 
   function expandTask(event) {
+    //if called not from inside of already expanded task:
     if (!event.target.closest(".task-item:has(textarea)")) {
       closeExpandedTasks();
+      const targetType = event.target.dataset.type;
+      let targetField = "";
       const taskItem = event.target.closest(".task-item");
       const taskExpanded = taskItem.querySelector(".task-expanded");
       const taskId = event.target.dataset.taskId;
       const task = state.getTaskById(taskId);
       taskExpanded.appendChild(TaskExpanded(task));
-      taskExpanded.querySelector(".title-input").focus();
+      switch (targetType) {
+        case "note":
+          targetField = ".description-textarea";
+          break;
+        case "date":
+          targetField = ".date-input";
+          break;
+        case "priority":
+          targetField = ".priority-input";
+          break;
+        default:
+          targetField = ".title-input";
+          break;
+      }
+      taskExpanded.querySelector(targetField).focus();
     }
   }
 
@@ -412,14 +366,6 @@ const GUI = (function () {
       //if (true) {
       state.syncStorage();
     }
-
-    /* document.getElementById("testDiv").textContent = JSON.stringify(
-      state.getProjects()[0].tasks.map((task) => {
-        return { dueDate: task.dueDate, type: typeof task.dueDate };
-      })
-    )
-      .split(",")
-      .join("\r\n"); */
   }
 
   return {
