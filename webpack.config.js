@@ -1,4 +1,5 @@
 const path = require("path");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
@@ -16,9 +17,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.css$/,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
+      },
+      /* {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      },
+      }, */
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: "asset/resource",
@@ -33,6 +38,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "Odin Todo!",
       template: "./src/index.html",
+    }),
+    new MiniCssExtractPlugin({
+      filename: "style.css",
     }),
   ],
 };
