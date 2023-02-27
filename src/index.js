@@ -287,15 +287,15 @@ const GUI = (function () {
 
   function expandTask(event) {
     //if called not from inside of already expanded task:
-    if (!event.target.closest(".task-item:has(textarea)")) {
-      closeExpandedTasks();
-      const taskId = event.target.dataset.taskId;
-      const task = state.getTaskById(taskId);
-      task.isExpanded = true;
+    //if (true || !event.target.closest(".task-item:has(textarea)")) {
+    closeExpandedTasks();
+    const taskId = event.target.dataset.taskId;
+    const task = state.getTaskById(taskId);
+    task.isExpanded = true;
 
-      refresh(event);
+    refresh(event);
 
-      /* taskExpanded.appendChild(TaskExpanded(task));
+    /* taskExpanded.appendChild(TaskExpanded(task));
       switch (targetType) {
         case "note":
           targetField = ".description-textarea";
@@ -311,7 +311,7 @@ const GUI = (function () {
           break;
       }
       taskExpanded.querySelector(targetField).focus(); */
-    }
+    //}
   }
 
   function closeExpandedTasks() {
@@ -349,6 +349,7 @@ const GUI = (function () {
         } else {
           taskContainer.appendChild(taskElement);
         }
+
         const taskExpanded = taskElement.querySelector(".task-expanded");
         if (task.isExpanded) {
           console.log("expansive!");
