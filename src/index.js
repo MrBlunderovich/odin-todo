@@ -123,11 +123,13 @@ const GUI = (function () {
     ) {
       //saveTaskData(event);
       closeExpandedTasks();
+      refresh();
     } else if (
       event.keyCode === 27 //&& //escape
       //event.target.dataset.isTaskInput
     ) {
       closeExpandedTasks();
+      refresh();
     }
   }
 
@@ -280,20 +282,20 @@ const GUI = (function () {
         targetTask[fieldType] = field.value;
       }
     });
-    refresh();
+    refresh(event);
   }
 
   function expandTask(event) {
     //if called not from inside of already expanded task:
     if (!event.target.closest(".task-item:has(textarea)")) {
       closeExpandedTasks();
-      const targetType = event.target.dataset.type;
-      let targetField = "";
-      const taskItem = event.target.closest(".task-item");
-      const taskExpanded = taskItem.querySelector(".task-expanded");
       const taskId = event.target.dataset.taskId;
       const task = state.getTaskById(taskId);
-      taskExpanded.appendChild(TaskExpanded(task));
+      task.isExpanded = true;
+
+      refresh(event);
+
+      /* taskExpanded.appendChild(TaskExpanded(task));
       switch (targetType) {
         case "note":
           targetField = ".description-textarea";
@@ -308,21 +310,24 @@ const GUI = (function () {
           targetField = ".title-input";
           break;
       }
-      taskExpanded.querySelector(targetField).focus();
+      taskExpanded.querySelector(targetField).focus(); */
     }
   }
 
   function closeExpandedTasks() {
-    const expandedDivs = document.querySelectorAll(".task-expanded");
-    expandedDivs.forEach((div) => (div.innerHTML = ""));
+    //take project as input, then go through tasks and set isExpanded
+    //on them to false
+    //Then call refresh() to turn DOM in compliance to state
+    topProject.tasks.forEach((task) => (task.isExpanded = false));
+    //refresh()
+    /* const expandedDivs = document.querySelectorAll(".task-expanded");
+    expandedDivs.forEach((div) => (div.innerHTML = "")); */
   }
   //////////////////////////////////-----------------REFRESH
-  function refresh(exception) {
-    //does it still need exception?
+  function refresh(event) {
     console.log("GUI.refresh invoked");
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
-    //if (exception !== "exceptTasks") {
     taskContainer.innerHTML = "";
     completedTaskContainer.innerHTML = "";
     if (!topProject) {
@@ -344,9 +349,33 @@ const GUI = (function () {
         } else {
           taskContainer.appendChild(taskElement);
         }
+        const taskExpanded = taskElement.querySelector(".task-expanded");
+        if (task.isExpanded) {
+          console.log("expansive!");
+          taskExpanded.appendChild(TaskExpanded(task));
+          const targetType = event.target.dataset.type;
+          let targetField = "";
+          switch (targetType) {
+            case "note":
+              targetField = ".description-textarea";
+              break;
+            case "date":
+              targetField = ".date-input";
+              break;
+            case "priority":
+              targetField = ".priority-input";
+              break;
+            default:
+              targetField = ".title-input";
+              break;
+          }
+          taskExpanded.querySelector(targetField).focus();
+        } else {
+          taskExpanded.innerHTML = "";
+        }
       }
     }
-    //}
+
     addButtonContainer.innerHTML = "";
     if (!topProject.isPseudo) {
       const addTaskButton = document.createElement("button");
@@ -364,7 +393,6 @@ const GUI = (function () {
       }
     }
     if (!topProject.isPseudo) {
-      //if (true) {
       state.syncStorage();
     }
   }

@@ -7,7 +7,8 @@ export default function Task(
   description = "",
   dueDate = "",
   priority = "",
-  isCompleted = false
+  isCompleted = false,
+  isExpanded = false
 ) {
   const _id = nanoid();
   let _projectId = projectId;
@@ -16,6 +17,7 @@ export default function Task(
   let _dueDate = dueDate;
   let _priority = priority;
   let _isCompleted = isCompleted;
+  let _isExpanded = isExpanded;
 
   return {
     get id() {
@@ -53,6 +55,12 @@ export default function Task(
     },
     set isCompleted(newIsCompleted) {
       _isCompleted = newIsCompleted;
+    },
+    get isExpanded() {
+      return _isExpanded;
+    },
+    set isExpanded(newIsExpanded) {
+      _isExpanded = newIsExpanded;
     },
   };
 }
