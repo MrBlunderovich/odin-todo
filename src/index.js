@@ -1,7 +1,7 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
 import Task from "./Task";
-import { TaskComponent, DescriptionModal, TaskExpanded } from "./TaskComponent";
+import { TaskComponent, TaskExpanded } from "./TaskComponent";
 import Project from "./Project";
 import { ProjectComponent } from "./ProjectComponent";
 import { isPast, isToday, endOfDay } from "date-fns";
@@ -37,11 +37,12 @@ const state = (function () {
     loadedProjects = loadedProjects.map((project) => {
       let newProject = Project(project.title, project.id, project.tasks);
       newProject.tasks = newProject.tasks.map((task) => {
+        const newDueDate = task.dueDate ? new Date(task.dueDate) : "";
         return Task(
           task.projectId,
           task.title,
           task.description,
-          new Date(task.dueDate),
+          newDueDate,
           task.priority,
           task.isCompleted
         );
@@ -123,8 +124,8 @@ const GUI = (function () {
       //saveTaskData(event);
       closeExpandedTasks();
     } else if (
-      event.keyCode === 27 && //escape
-      event.target.dataset.isTaskInput
+      event.keyCode === 27 //&& //escape
+      //event.target.dataset.isTaskInput
     ) {
       closeExpandedTasks();
     }
@@ -315,7 +316,7 @@ const GUI = (function () {
     const expandedDivs = document.querySelectorAll(".task-expanded");
     expandedDivs.forEach((div) => (div.innerHTML = ""));
   }
-
+  //////////////////////////////////-----------------REFRESH
   function refresh(exception) {
     //does it still need exception?
     console.log("GUI.refresh invoked");
@@ -380,3 +381,16 @@ export function capitalize(string) {
 }
 
 GUI.refresh();
+
+/* function correctDates() {
+  for (let project of state.getProjects()) {
+    for (let task of project.tasks) {
+      if (task.dueDate && task.dueDate.getFullYear() === 1970) {
+        console.log(task.dueDate);
+        task.dueDate = new Date();
+      }
+    }
+  }
+  state.syncStorage();
+}
+correctDates(); */
