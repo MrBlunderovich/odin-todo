@@ -155,7 +155,8 @@ body {
   column-gap: 0.5rem;
   align-items: center;
 }
-.task-item:has(.task-input-container) {
+.task-item:has(.task-input-container),
+.expanded {
   background-color: #ffefae;
 }
 .task-isCompleted {

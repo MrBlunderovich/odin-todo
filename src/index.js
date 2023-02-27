@@ -356,6 +356,7 @@ const GUI = (function () {
         if (task.isExpanded) {
           console.log("expansive!");
           taskExpanded.appendChild(TaskExpanded(task));
+          taskExpanded.classList.add("expanded");
           const targetType = event.target.dataset.type;
           let targetField = "";
           switch (targetType) {
@@ -375,6 +376,7 @@ const GUI = (function () {
           taskExpanded.querySelector(targetField).focus();
         } else {
           taskExpanded.innerHTML = "";
+          taskExpanded.classList.remove("expanded");
         }
       }
     }
