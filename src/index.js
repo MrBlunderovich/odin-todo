@@ -95,13 +95,6 @@ state.loadProjects();
 
 //////////////////////////////////////////////////////////////////////
 const GUI = (function () {
-  const projectsContainer = document.querySelector(".project-container");
-  const projectTitle = document.querySelector(".project-expanded-title");
-  const taskContainer = document.querySelector(".task-container");
-  const completedTaskContainer = document.querySelector(
-    ".completed-task-container"
-  );
-  const addButtonContainer = document.querySelector(".add-container");
   let topProject = undefined;
 
   //////////////////////////////////////////////+++++++++++++++++++CHANGE
@@ -326,6 +319,15 @@ const GUI = (function () {
   //////////////////////////////////-----------------REFRESH
   function refresh(event) {
     console.log("GUI.refresh invoked");
+
+    const projectsContainer = document.querySelector(".project-container");
+    const projectTitle = document.querySelector(".project-expanded-title");
+    const taskContainer = document.querySelector(".task-container");
+    const completedTaskContainer = document.querySelector(
+      ".completed-task-container"
+    );
+    const addButtonContainer = document.querySelector(".add-container");
+
     const currentProjects = state.getProjects();
     topProject = currentProjects[0];
     taskContainer.innerHTML = "";
