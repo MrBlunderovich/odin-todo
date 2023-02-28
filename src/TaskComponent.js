@@ -16,6 +16,11 @@ export function TaskComponent(task) {
   taskElement.appendChild(MakeDelete(task));
   taskElement.appendChild(MakeContainer(task));
 
+  Array.from(taskElement.children).forEach((element) => {
+    element.dataset.projectId = task.projectId;
+    element.dataset.taskId = task.id;
+  });
+
   return taskElement;
 }
 
@@ -26,8 +31,6 @@ function MakeCheckbox(task) {
     ? "check_box"
     : "check_box_outline_blank";
   checkbox.checked = task.isCompleted;
-  checkbox.dataset.projectId = task.projectId;
-  checkbox.dataset.taskId = task.id;
   checkbox.dataset.type = "complete-task";
   return checkbox;
 }
@@ -36,8 +39,6 @@ function MakeTitle(task) {
   const title = document.createElement("span");
   title.classList.add(`task-title`);
   title.textContent = task.title;
-  title.dataset.projectId = task.projectId;
-  title.dataset.taskId = task.id;
   title.dataset.type = "title";
   title.dataset.expander = true;
   return title;
@@ -47,8 +48,6 @@ function MakePriority(task) {
   const priority = document.createElement("span");
   priority.classList.add(`task-priority`, "material-icons-outlined");
   priority.textContent = task.priority === "high" ? "priority_high" : "";
-  priority.dataset.projectId = task.projectId;
-  priority.dataset.taskId = task.id;
   priority.dataset.type = "priority";
   priority.dataset.expander = true;
   return priority;
@@ -58,8 +57,6 @@ function MakeNote(task) {
   const note = document.createElement("span");
   note.classList.add(`task-note`, "material-icons-outlined");
   note.textContent = task.description ? "description" : "note_add";
-  note.dataset.projectId = task.projectId;
-  note.dataset.taskId = task.id;
   note.dataset.type = "note";
   note.dataset.expander = true;
   return note;
@@ -68,8 +65,6 @@ function MakeNote(task) {
 function MakeDate(task) {
   const date = document.createElement("span");
   date.classList.add(`task-date`);
-  date.dataset.projectId = task.projectId;
-  date.dataset.taskId = task.id;
   date.dataset.type = "date";
   date.dataset.expander = true;
   if (task.dueDate && isValid(task.dueDate)) {
@@ -92,8 +87,6 @@ function MakeDelete(task) {
   const button = document.createElement("span");
   button.classList.add("task-delete", "material-icons-outlined");
   button.textContent = "delete_forever";
-  button.dataset.projectId = task.projectId;
-  button.dataset.taskId = task.id;
   button.dataset.type = "delete-task";
   return button;
 }
@@ -101,8 +94,6 @@ function MakeDelete(task) {
 function MakeContainer(task) {
   const container = document.createElement("div");
   container.classList.add("task-expanded");
-  container.dataset.projectId = task.projectId;
-  container.dataset.taskId = task.id;
   container.dataset.type = "expanded";
   return container;
 }
@@ -144,8 +135,6 @@ function TitleInput(task) {
 function PriorityInput(task) {
   const element = document.createElement("select");
   element.classList.add(`priority-input`);
-  element.dataset.projectId = task.projectId;
-  element.dataset.taskId = task.id;
   for (let option of ["normal", "high"]) {
     const optionElement = document.createElement("option");
     optionElement.innerText = option;
