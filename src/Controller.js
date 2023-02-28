@@ -9,6 +9,7 @@ const Controller = (function () {
   function handleDocumentChange(event) {
     if (event.target.id === "project-expanded-title") {
       changeProjectTitle(event);
+      event.target.blur();
     } else if (event.target.closest(".task-expanded")) {
       saveTaskData(event);
     }
@@ -31,6 +32,14 @@ const Controller = (function () {
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     //avoid checking unnecessary conditions
+    if (
+      document.querySelector(".task-item.expanded") &&
+      !event.target.closest(".task-item")
+    ) {
+      closeExpandedTasks();
+      //refresh();
+    }
+
     if (event.target.dataset.type === "complete-task") {
       completeTask(event);
     } else if (event.target.closest(".main")) {
