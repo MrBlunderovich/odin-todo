@@ -1,5 +1,7 @@
 //import { nanoid } from "nanoid";
 import "./style.css";
+import Render from "./refresh";
+import State from "./state";
 import Task from "./Task";
 import { TaskComponent, TaskExpanded } from "./TaskComponent";
 import Project from "./Project";
@@ -280,42 +282,18 @@ const GUI = (function () {
 
   function expandTask(event) {
     //if called not from inside of already expanded task:
-    //if (true || !event.target.closest(".task-item:has(textarea)")) {
     closeExpandedTasks();
     const taskId = event.target.dataset.taskId;
     const task = state.getTaskById(taskId);
     task.isExpanded = true;
 
     refresh(event);
-
-    /* taskExpanded.appendChild(TaskExpanded(task));
-      switch (targetType) {
-        case "note":
-          targetField = ".description-textarea";
-          break;
-        case "date":
-          targetField = ".date-input";
-          break;
-        case "priority":
-          targetField = ".priority-input";
-          break;
-        default:
-          targetField = ".title-input";
-          break;
-      }
-      taskExpanded.querySelector(targetField).focus(); */
-    //}
   }
 
   function closeExpandedTasks() {
-    //take project as input, then go through tasks and set isExpanded
-    //on them to false
-    //Then call refresh() to turn DOM in compliance to state
     topProject.tasks.forEach((task) => (task.isExpanded = false));
-    //refresh()
-    /* const expandedDivs = document.querySelectorAll(".task-expanded");
-    expandedDivs.forEach((div) => (div.innerHTML = "")); */
   }
+
   //////////////////////////////////-----------------REFRESH
   function refresh(event) {
     console.log("GUI.refresh invoked");
