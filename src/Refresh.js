@@ -12,8 +12,6 @@ export default function refresh(State, event) {
   );
   const addButtonContainer = document.querySelector(".add-container");
 
-  /* const currentProjects = State.getProjects();
-  topProject = currentProjects[0]; */
   taskContainer.innerHTML = "";
   completedTaskContainer.innerHTML = "";
   if (!State.topProject) {

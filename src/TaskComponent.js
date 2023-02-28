@@ -1,5 +1,5 @@
 import { intlFormatDistance, isValid, isPast, endOfDay } from "date-fns";
-import { capitalize } from "./capitalize";
+import { capitalize } from "./Capitalize";
 
 export function TaskComponent(task) {
   const taskElement = document.createElement("li");
@@ -179,91 +179,3 @@ function TextArea(task) {
   textArea.dataset.type = "description";
   return textArea;
 }
-
-//////////////////////////////////////////////////////////////////////////
-/* function TaskInput(task, fieldType) {
-  let inputType = "text";
-  switch (fieldType) {
-    case "dueDate":
-      inputType = "date";
-      break;
-    case "priority":
-      inputType = "select";
-      break;
-    default:
-      inputType = "text";
-      break;
-  }
-  if (inputType === "select") {
-    const element = document.createElement("select");
-    element.classList.add(`${fieldType}-input`);
-    element.dataset.projectId = task.projectId;
-    element.dataset.taskId = task.id;
-    element.dataset.type = fieldType;
-    for (let option of ["normal", "high"]) {
-      const optionElement = document.createElement("option");
-      optionElement.innerText = option;
-      optionElement.value = option;
-      if (option === "normal") {
-        optionElement.selected = true;
-      }
-      element.appendChild(optionElement);
-    }
-    element.value = task[fieldType];
-    return element;
-  } else {
-    const element = document.createElement("input");
-    element.type = inputType;
-    element.classList.add(`${fieldType}-input`);
-    //element.value = task[fieldType];
-    if (fieldType === "description") {
-      element.value = task[fieldType].replaceAll("\n", " ");
-      element.placeholder = "...";
-    } else if (fieldType === "dueDate") {
-      if (task.dueDate && isValid(task.dueDate)) {
-        element.valueAsDate = task.dueDate;
-      }
-    } else {
-      element.value = task[fieldType];
-    }
-    if (element.type === "checkbox") {
-      element.checked = task.isCompleted;
-    }
-    element.dataset.projectId = task.projectId;
-    element.dataset.taskId = task.id;
-    element.dataset.type = fieldType;
-    return element;
-  }
-} */
-
-/* export function DescriptionModal(task) {
-  const modalContainer = document.createElement("div");
-  modalContainer.classList.add("description-modal-container");
-  modalContainer.dataset.taskId = task.id;
-  modalContainer.dataset.projectId = task.projectId;
-  modalContainer.dataset.type = "modal-container";
-  const modal = document.createElement("div");
-  modal.classList.add("description-modal");
-  modal.dataset.taskId = task.id;
-  modal.dataset.projectId = task.projectId;
-  modal.dataset.type = "modal";
-  const textArea = document.createElement("textarea");
-  textArea.id = "description-textarea";
-  textArea.classList.add("description-modal-textarea");
-  textArea.dataset.taskId = task.id;
-  textArea.dataset.projectId = task.projectId;
-  textArea.value = task.description;
-  const submitBtn = document.createElement("button");
-  submitBtn.classList.add("description-modal-btn");
-  submitBtn.dataset.taskId = task.id;
-  submitBtn.dataset.projectId = task.projectId;
-  submitBtn.dataset.type = "modal-save";
-  submitBtn.textContent = "Save (Ctrl+Enter)";
-
-  modal.appendChild(textArea);
-  modal.appendChild(submitBtn);
-  modalContainer.appendChild(modal);
-
-  return modalContainer;
-}
- */

@@ -1,6 +1,6 @@
 import "./style.css";
-import Render from "./refresh";
-import State from "./state";
+import Render from "./Refresh";
+import State from "./State";
 import Controller from "./Controller";
 
 State.loadProjects();
