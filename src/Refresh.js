@@ -35,55 +35,67 @@ export default function refresh(State, event) {
       } else {
         taskContainer.appendChild(taskElement);
       }
+      renderExpandedTaskInputs(event, task, taskElement);
+    }
+  }
 
-      const taskExpanded = taskElement.querySelector(".task-expanded");
-      if (task.isExpanded) {
-        console.log("expansive!");
-        if (event) {
-          taskExpanded.appendChild(TaskExpanded(task));
-          taskExpanded.closest(".task-item").classList.add("expanded");
-          const targetType = event.target.dataset.type;
-          let targetField = "";
-          switch (targetType) {
-            case "note":
-              targetField = ".description-textarea";
-              break;
-            case "date":
-              targetField = ".date-input";
-              break;
-            case "priority":
-              targetField = ".priority-input";
-              break;
-            default:
-              targetField = ".title-input";
-              break;
-          }
-          taskExpanded.querySelector(targetField).focus();
+  renderAddTaskButton();
+
+  renderSidebarCards(State, projectsContainer);
+
+  if (!State.topProject.isPseudo) {
+    State.syncStorage();
+  }
+  ///////////////////////////////////////////////////
+
+  function renderExpandedTaskInputs(event, task, taskElement) {
+    const taskExpanded = taskElement.querySelector(".task-expanded");
+    if (task.isExpanded) {
+      if (event) {
+        taskExpanded.appendChild(TaskExpanded(task));
+        taskExpanded.closest(".task-item").classList.add("expanded");
+        const targetType = event.target.dataset.type;
+        let targetField = "";
+        switch (targetType) {
+          case "note":
+            targetField = ".description-textarea";
+            break;
+          case "date":
+            targetField = ".date-input";
+            break;
+          case "priority":
+            targetField = ".priority-input";
+            break;
+          default:
+            targetField = ".title-input";
+            break;
         }
-      } else {
-        taskExpanded.innerHTML = "";
-        taskExpanded.closest(".task-item").classList.remove("expanded");
+        taskExpanded.querySelector(targetField).focus();
+      }
+    } else {
+      taskExpanded.innerHTML = "";
+      taskExpanded.closest(".task-item").classList.remove("expanded");
+    }
+  }
+
+  function renderSidebarCards() {
+    projectsContainer.innerHTML = "";
+    for (let project of State.projects) {
+      if (!project.isPseudo) {
+        const projectCard = ProjectComponent(project);
+        projectsContainer.appendChild(projectCard);
       }
     }
   }
 
-  addButtonContainer.innerHTML = "";
-  if (!State.topProject.isPseudo) {
-    const addTaskButton = document.createElement("button");
-    addTaskButton.classList.add("new-task-btn");
-    addTaskButton.dataset.type = "add-task";
-    addTaskButton.textContent = "+ Add task";
-    addButtonContainer.appendChild(addTaskButton);
-  }
-
-  projectsContainer.innerHTML = "";
-  for (let project of State.projects) {
-    if (!project.isPseudo) {
-      const projectCard = ProjectComponent(project);
-      projectsContainer.appendChild(projectCard);
+  function renderAddTaskButton() {
+    addButtonContainer.innerHTML = "";
+    if (!State.topProject.isPseudo) {
+      const addTaskButton = document.createElement("button");
+      addTaskButton.classList.add("new-task-btn");
+      addTaskButton.dataset.type = "add-task";
+      addTaskButton.textContent = "+ Add task";
+      addButtonContainer.appendChild(addTaskButton);
     }
-  }
-  if (!State.topProject.isPseudo) {
-    State.syncStorage();
   }
 }
