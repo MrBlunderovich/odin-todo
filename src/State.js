@@ -15,10 +15,6 @@ const state = (function () {
     _projects = _projects.filter((project) => project.id !== id);
   }
 
-  function getProjects() {
-    return _projects;
-  }
-
   function loadProjects() {
     let loadedProjects = localStorage.getItem("projects");
     if (loadedProjects && _projects.length === 0) {
@@ -87,7 +83,6 @@ const state = (function () {
   return {
     createProject,
     removeProject,
-    getProjects,
     loadProjects,
     selectProject,
     syncStorage,

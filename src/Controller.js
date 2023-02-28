@@ -85,7 +85,7 @@ const Controller = (function () {
     console.log("GUI.overduePseudoProject invoked");
     State.clearPseudoProjects();
     const overdueTasks = [];
-    State.getProjects().forEach((project) => {
+    State.projects.forEach((project) => {
       project.tasks.forEach((task) => {
         if (isPast(endOfDay(task.dueDate))) {
           overdueTasks.push(task);
@@ -100,7 +100,7 @@ const Controller = (function () {
     console.log("GUI.todayPseudoProject invoked");
     State.clearPseudoProjects();
     const todayTasks = [];
-    State.getProjects().forEach((project) => {
+    State.projects.forEach((project) => {
       project.tasks.forEach((task) => {
         if (isToday(task.dueDate)) {
           todayTasks.push(task);
@@ -155,17 +155,9 @@ const Controller = (function () {
 
   function deleteTask(event) {
     console.log("GUI deleting task");
-    //debugger;
-
     if (event.ctrlKey || confirm("Please confirm deleting task")) {
       const taskId = event.target.dataset.taskId;
       State.removeTask(taskId);
-      //State.topProject.removeTask(event.target.dataset.taskId);
-
-      //wrongo! should remove from state, not from project
-      //task can be in a pseudo-project and in original one
-      //console.log(State.projects);
-      //console.log(State.topProject);
       refresh();
     }
   }
