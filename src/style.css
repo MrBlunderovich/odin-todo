@@ -115,14 +115,14 @@ body {
   min-height: 1.5rem;
   flex-direction: row;
 }
-.pseudo-project::before {
+/* .pseudo-project::before {
   content: " ";
   border-radius: 50%;
   height: 0.8rem;
   width: 0.8rem;
   background-color: #fe6955;
   margin-right: 1ch;
-}
+} */
 .today::before {
   background-color: #78dfff;
 }
