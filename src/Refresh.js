@@ -35,7 +35,13 @@ export default function refresh(State, event) {
       } else {
         taskContainer.appendChild(taskElement);
       }
-      renderExpandedTaskInputs(event, task, taskElement);
+      const taskExpanded = taskElement.querySelector(".task-expanded");
+      if (task.isExpanded) {
+        renderExpandedTaskInputs(event, task);
+      } else {
+        taskExpanded.innerHTML = "";
+        taskExpanded.closest(".task-item").classList.remove("expanded");
+      }
     }
   }
 
@@ -48,34 +54,34 @@ export default function refresh(State, event) {
   }
   ///////////////////////////////////////////////////
 
-  function renderExpandedTaskInputs(event, task, taskElement) {
-    const taskExpanded = taskElement.querySelector(".task-expanded");
-    if (task.isExpanded) {
-      if (event) {
-        taskExpanded.appendChild(TaskExpanded(task));
-        taskExpanded.closest(".task-item").classList.add("expanded");
-        const targetType = event.target.dataset.type;
-        let targetField = "";
-        switch (targetType) {
-          case "note":
-            targetField = ".description-textarea";
-            break;
-          case "date":
-            targetField = ".date-input";
-            break;
-          case "priority":
-            targetField = ".priority-input";
-            break;
-          default:
-            targetField = ".title-input";
-            break;
-        }
-        taskExpanded.querySelector(targetField).focus();
+  function renderExpandedTaskInputs(event, task) {
+    /* const taskExpanded = taskElement.querySelector(".task-expanded");
+    if (task.isExpanded) { */
+    if (event) {
+      taskExpanded.appendChild(TaskExpanded(task));
+      taskExpanded.closest(".task-item").classList.add("expanded");
+      const targetType = event.target.dataset.type;
+      let targetField = "";
+      switch (targetType) {
+        case "note":
+          targetField = ".description-textarea";
+          break;
+        case "date":
+          targetField = ".date-input";
+          break;
+        case "priority":
+          targetField = ".priority-input";
+          break;
+        default:
+          targetField = ".title-input";
+          break;
       }
-    } else {
+      taskExpanded.querySelector(targetField).focus();
+    }
+    /* } else {
       taskExpanded.innerHTML = "";
       taskExpanded.closest(".task-item").classList.remove("expanded");
-    }
+    } */
   }
 
   function renderSidebarCards() {
