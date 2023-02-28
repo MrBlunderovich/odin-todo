@@ -155,8 +155,17 @@ const Controller = (function () {
 
   function deleteTask(event) {
     console.log("GUI deleting task");
+    //debugger;
+
     if (event.ctrlKey || confirm("Please confirm deleting task")) {
-      State.topProject.removeTask(event.target.dataset.taskId);
+      const taskId = event.target.dataset.taskId;
+      State.removeTask(taskId);
+      //State.topProject.removeTask(event.target.dataset.taskId);
+
+      //wrongo! should remove from state, not from project
+      //task can be in a pseudo-project and in original one
+      //console.log(State.projects);
+      //console.log(State.topProject);
       refresh();
     }
   }
@@ -205,8 +214,6 @@ const Controller = (function () {
 
   //////////////////////////////////-----------------REFRESH
   function refresh(event) {
-    console.log("GUI.refresh invoked");
-
     Render(State, event);
   }
 })();

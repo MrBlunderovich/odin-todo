@@ -57,7 +57,7 @@ function MakePriority(task) {
 function MakeNote(task) {
   const note = document.createElement("span");
   note.classList.add(`task-note`, "material-icons-outlined");
-  note.textContent = task.description ? "description" : "note_add"; //'description' for filled note
+  note.textContent = task.description ? "description" : "note_add";
   note.dataset.projectId = task.projectId;
   note.dataset.taskId = task.id;
   note.dataset.type = "note";

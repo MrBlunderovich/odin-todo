@@ -77,6 +77,13 @@ const state = (function () {
     _projects = _projects.filter((project) => !project.isPseudo);
   }
 
+  function removeTask(id) {
+    console.log("state.removeTask invoked");
+    for (let project of _projects) {
+      project.tasks = project.tasks.filter((task) => task.id !== id);
+    }
+  }
+
   return {
     createProject,
     removeProject,
@@ -87,6 +94,7 @@ const state = (function () {
     getTaskById,
     getProjectById,
     clearPseudoProjects,
+    removeTask,
     get projects() {
       return _projects;
     },
