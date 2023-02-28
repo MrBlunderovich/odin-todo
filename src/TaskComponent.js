@@ -1,5 +1,5 @@
 import { intlFormatDistance, isValid, isPast, endOfDay } from "date-fns";
-import { capitalize } from "./index";
+import { capitalize } from "./capitalize";
 
 export function TaskComponent(task) {
   const taskElement = document.createElement("li");

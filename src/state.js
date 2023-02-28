@@ -1,3 +1,6 @@
+import Task from "./Task";
+import Project from "./Project";
+
 const state = (function () {
   let _projects = [];
 
@@ -5,10 +8,10 @@ const state = (function () {
     console.log("state.addProject invoked");
     const newProject = Project(title, undefined, tasks, isPseudo);
     _projects.unshift(newProject);
-    GUI.refresh();
+    /* Controller.refresh();
     if (!newProject.isPseudo) {
-      GUI.createNewTask();
-    }
+      Controller.createNewTask();
+    } */
   }
   function removeProject(id) {
     console.log("state.removeProject invoked");
@@ -80,6 +83,12 @@ const state = (function () {
     getTaskById,
     getProjectById,
     clearPseudoProjects,
+    get projects() {
+      return _projects;
+    },
+    get topProject() {
+      return _projects[0] ? _projects[0] : undefined;
+    },
   };
 })();
 export default state;

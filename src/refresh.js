@@ -1,4 +1,7 @@
-export default function refresh(state, event) {
+import { TaskComponent, TaskExpanded } from "./TaskComponent";
+import { ProjectComponent } from "./ProjectComponent";
+
+export default function refresh(State, event) {
   console.log("GUI.refresh invoked");
 
   const projectsContainer = document.querySelector(".project-container");
@@ -9,24 +12,26 @@ export default function refresh(state, event) {
   );
   const addButtonContainer = document.querySelector(".add-container");
 
-  const currentProjects = state.getProjects();
-  topProject = currentProjects[0];
+  /* const currentProjects = State.getProjects();
+  topProject = currentProjects[0]; */
   taskContainer.innerHTML = "";
   completedTaskContainer.innerHTML = "";
-  if (!topProject) {
+  if (!State.topProject) {
     console.warn("GUI.refresh: no projects available");
     projectTitle.value = "Let's start a new project!";
   } else {
-    projectTitle.value = topProject.title;
-    if (topProject.isPseudo) {
+    projectTitle.value = State.topProject.title;
+
+    if (State.topProject.isPseudo) {
       projectTitle.readOnly = true;
     } else {
       projectTitle.readOnly = false;
     }
-    for (let task of topProject.tasks) {
+
+    for (let task of State.topProject.tasks) {
       const taskElement = TaskComponent(task);
       if (task.isCompleted) {
-        if (!topProject.isPseudo) {
+        if (!State.topProject.isPseudo) {
           completedTaskContainer.appendChild(taskElement);
         }
       } else {
@@ -36,25 +41,27 @@ export default function refresh(state, event) {
       const taskExpanded = taskElement.querySelector(".task-expanded");
       if (task.isExpanded) {
         console.log("expansive!");
-        taskExpanded.appendChild(TaskExpanded(task));
-        taskExpanded.closest(".task-item").classList.add("expanded");
-        const targetType = event.target.dataset.type;
-        let targetField = "";
-        switch (targetType) {
-          case "note":
-            targetField = ".description-textarea";
-            break;
-          case "date":
-            targetField = ".date-input";
-            break;
-          case "priority":
-            targetField = ".priority-input";
-            break;
-          default:
-            targetField = ".title-input";
-            break;
+        if (event) {
+          taskExpanded.appendChild(TaskExpanded(task));
+          taskExpanded.closest(".task-item").classList.add("expanded");
+          const targetType = event.target.dataset.type;
+          let targetField = "";
+          switch (targetType) {
+            case "note":
+              targetField = ".description-textarea";
+              break;
+            case "date":
+              targetField = ".date-input";
+              break;
+            case "priority":
+              targetField = ".priority-input";
+              break;
+            default:
+              targetField = ".title-input";
+              break;
+          }
+          taskExpanded.querySelector(targetField).focus();
         }
-        taskExpanded.querySelector(targetField).focus();
       } else {
         taskExpanded.innerHTML = "";
         taskExpanded.closest(".task-item").classList.remove("expanded");
@@ -63,7 +70,7 @@ export default function refresh(state, event) {
   }
 
   addButtonContainer.innerHTML = "";
-  if (!topProject.isPseudo) {
+  if (!State.topProject.isPseudo) {
     const addTaskButton = document.createElement("button");
     addTaskButton.classList.add("new-task-btn");
     addTaskButton.dataset.type = "add-task";
@@ -72,13 +79,13 @@ export default function refresh(state, event) {
   }
 
   projectsContainer.innerHTML = "";
-  for (let project of currentProjects) {
+  for (let project of State.projects) {
     if (!project.isPseudo) {
       const projectCard = ProjectComponent(project);
       projectsContainer.appendChild(projectCard);
     }
   }
-  if (!topProject.isPseudo) {
-    state.syncStorage();
+  if (!State.topProject.isPseudo) {
+    State.syncStorage();
   }
 }
