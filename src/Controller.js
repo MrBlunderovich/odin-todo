@@ -17,16 +17,10 @@ const Controller = (function () {
   document.addEventListener("keyup", handleDocumentKeyUp);
   function handleDocumentKeyUp(event) {
     if (
-      event.keyCode === 13 && //enter
-      event.ctrlKey &&
-      event.target.dataset.isTaskInput
-    ) {
-      //saveTaskData(event);
-      closeExpandedTasks();
-      refresh();
-    } else if (
-      event.keyCode === 27 //&& //escape
-      //event.target.dataset.isTaskInput
+      (event.keyCode === 13 && //enter
+        event.ctrlKey &&
+        event.target.dataset.isTaskInput) ||
+      event.keyCode === 27 //esc
     ) {
       closeExpandedTasks();
       refresh();
@@ -37,36 +31,32 @@ const Controller = (function () {
   document.addEventListener("click", handleDocumentClick);
   function handleDocumentClick(event) {
     //avoid checking unnecessary conditions
-    if (event.target.dataset.expander) {
-      expandTask(event);
-    }
-    if (event.target.dataset.type === "delete-task") {
-      deleteTask(event);
-    }
     if (event.target.dataset.type === "complete-task") {
       completeTask(event);
-    }
-    if (event.target.dataset.type === "add-task") {
-      createNewTask();
-    }
-    if (event.target.dataset.type === "del-project") {
-      deleteProject(event);
-    }
-    if (
-      event.target.closest(".project-container") &&
-      event.target.id !== "project-container" &&
-      event.target.dataset.type !== "complete-task"
-    ) {
-      selectProject(event);
-    }
-    if (event.target.dataset.type === "new-project") {
-      createNewProject();
-    }
-    if (event.target.dataset.type === "overdue-project") {
-      overduePseudoProject();
-    }
-    if (event.target.dataset.type === "today-project") {
-      todayPseudoProject();
+    } else if (event.target.closest(".main")) {
+      if (event.target.dataset.type === "add-task") {
+        createNewTask();
+      } else if (event.target.dataset.expander) {
+        expandTask(event);
+      } else if (event.target.dataset.type === "delete-task") {
+        deleteTask(event);
+      }
+    } else if (event.target.closest(".sidebar")) {
+      if (
+        event.target.closest(".project-container") &&
+        event.target.id !== "project-container" &&
+        event.target.dataset.type !== "complete-task"
+      ) {
+        selectProject(event);
+      } else if (event.target.dataset.type === "overdue-project") {
+        overduePseudoProject();
+      } else if (event.target.dataset.type === "today-project") {
+        todayPseudoProject();
+      } else if (event.target.dataset.type === "new-project") {
+        createNewProject();
+      } else if (event.target.dataset.type === "del-project") {
+        deleteProject(event);
+      }
     }
   }
   /////////////////////////////////****************************FUNCTIONS
