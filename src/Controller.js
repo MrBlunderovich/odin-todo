@@ -54,7 +54,8 @@ const Controller = (function () {
       if (
         event.target.closest(".project-container") &&
         event.target.id !== "project-container" &&
-        event.target.dataset.type !== "complete-task"
+        event.target.dataset.type !== "complete-task" &&
+        event.target.dataset.type !== "del-project"
       ) {
         selectProject(event);
       } else if (event.target.dataset.type === "overdue-project") {
