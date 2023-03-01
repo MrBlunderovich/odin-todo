@@ -1,7 +1,7 @@
 export default function createPageStructure() {
   document.body.innerHTML = `
 <header class="header">
-      Projectile
+      Projectile.
       <div class="avatar"></div>
     </header>
     <div class="page-container">
