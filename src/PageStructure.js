@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- <script src="bundle.js" defer></script> -->
-    <title>Odin Todo</title>
-  </head>
-  <body>
-    <!-- <header class="header">
+export default function createPageStructure() {
+  document.body.innerHTML = `
+<header class="header">
       Projectile
       <div class="avatar"></div>
     </header>
@@ -38,6 +30,6 @@
           <ul class="completed-task-container"></ul>
         </div>
       </main>
-    </div> -->
-  </body>
-</html>
+    </div>
+`;
+}
