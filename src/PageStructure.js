@@ -1,4 +1,4 @@
-export default function createPageStructure() {
+const createPageStructure = (function () {
   document.body.innerHTML = `
 <header class="header">
       Projectile.
@@ -32,4 +32,5 @@ export default function createPageStructure() {
       </main>
     </div>
 `;
-}
+})();
+export default createPageStructure;
