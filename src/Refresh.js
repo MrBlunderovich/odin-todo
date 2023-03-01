@@ -37,7 +37,7 @@ export default function refresh(State, event) {
       }
       const taskExpanded = taskElement.querySelector(".task-expanded");
       if (task.isExpanded) {
-        renderExpandedTaskInputs(event, task);
+        renderExpandedTaskInputs(event, task, taskExpanded);
       } else {
         taskExpanded.innerHTML = "";
         taskExpanded.closest(".task-item").classList.remove("expanded");
@@ -54,7 +54,7 @@ export default function refresh(State, event) {
   }
   ///////////////////////////////////////////////////
 
-  function renderExpandedTaskInputs(event, task) {
+  function renderExpandedTaskInputs(event, task, taskExpanded) {
     /* const taskExpanded = taskElement.querySelector(".task-expanded");
     if (task.isExpanded) { */
     if (event) {
